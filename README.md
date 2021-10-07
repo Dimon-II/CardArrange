@@ -1,2 +1,22 @@
 # CardArrange
-Program for processing scanned card games - slipit and align.
+Program for processing scanned card games - slpit and align.
+
+1. The program allows you to select several rectangular areas located at different angles in the picture.
+2. Automatic recognition works for an angle of no more than 30 degrees (the default is 20), cards should be at clear but not too long intervals and have clearly visible borders of the card itself or a frame picture on the card.
+3. Open the image file (preferably 300 DPI, it’s inconvenient to work with a larger one).
+4. Set the size of the cards (Size), the number of cards on the sheet (Count) and the approximate indent left / top (Delta)
+5. By double-clicking on the upper left corner of the card in the picture, you can set the frame and check the entered size.
+6. Button ?{: fills the table with approximate coordinates of the cards according to their size and number. 
+7. If the picture is already loaded - auto-recognition is performed. If the center of the recognized area is in the area of ​​the “approximate” card, then new coordinates and an angle are set for it, otherwise a row is added to the table. 
+8. If all cards have the same color frame, you can use the new [Frame] auto-recognition mode. To do this, select a border color:
+  - (Frame color) button and click on the picture in the area with the desired color
+  - switch (Ground / Frame) mode
+  - and try with different contrast options.
+(This mode solves the problem with shadows of cards on a light background).
+9. When you select a card in the table, it is displayed on the screen with a flickering frame. Coordinates and angles can be corrected using the buttons with arrows and map rotation, double-click on the upper left corner, or enter coordinates manually.
+19. This table is written to the INI file with the name of the image file and is automatically loaded when the image is reloaded.
+11. Cards are exported in the same block as in the original image (for example 3x3), with the Split option you can change the export block or save cards one at a time in a separate file.
+12. Frame - draws a single-color frame on top of the card, Round rect - rounds the corners of the frame, the color is selected on the original image. If the visible elements of the cardp are far from its edge, you can temporarily assign a frame for manual positioning and zero before exporting.
+13. Cutting line adds cut marks when exporting
+14. Parameters Border, Interval specify the placement of cards during export, Mirror fills the interval between cards.
+15. The Selected tab allows you to see already rotated card and focusing on some vertical element to specify the degree of rotation by combining the image in the enlarged block when the mouse button is pressed.
