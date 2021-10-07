@@ -1,0 +1,52 @@
+﻿CardArrange 
+Software de código abierto, Software gratuito
+Es un programa para procesar cartas de juegos escaneadas. Nueva versión de 2021.
+
+
+El programa permite seleccionar varias áreas localizadas en diferentes ángulos en la imagen. El reconocimiento automático funciona para un ángulo de no más de 30 grados (20 por defecto). Las cartas deben estar sueltas pero no a demasiada separación y deben tener los bordes bien visibles, para lo que se puede utilizar un papel o cartulina de color para aumentar el contraste de los mismos.
+________________
+
+
+
+Cómo funciona: 
+1. Abre el archivo dei magen. (PNG/JPEG).
+
+2. Selecciona el tamaño en píxeles de las cartas [Size], el número de cartas en la página [Count] y la separación aproximada arriba/izquierda [Delta].
+
+3. Haciendo doble clic en la esquina superior izquierda de la carta en la imagen, puedes seleccionar el marco sobre la carta escaneada y comprobar el tamaño seleccionado.
+
+4. Botón [?{:] rellena la tabla con coordenadas aproximadas del as cartas de acuerdo a su tamaño y cantidad. Esto prepara la tabla antes de la alineación manual. 
+
+5. Si la imagena ya está cargada, se realiza el auto-reconocimiento. Si el centro del área reconocida se encuentra en el área de la carta por aproximación, las nuevas coordenadas y el ángulo se ajusta para ella, de otra forma se añade una fila a la tabla. El método por defecto es [Ground], que busca las áreas que son diferentes del color de fondo (el punto medio del [Delta]).
+
+6. Si todas las cartas tienen el mismo marco de color, puedes usar el nuevo modo de auto-reconocimiento [Frame], que encuentra las áreas con los marcos de un color especificado. Para hacer esto, selecciona un color de marco para la carta, presiona el botón [Frame color] y haz clic en la imagen en el área con el color deseado; cambia entre los modos [Ground / Frame] y prueba a reconocer con diferentes opciones de contraste. Este modo resuelve el problema con las sombras de cartas con luz de fondo.
+
+7. Cuando seleccionas una carta en la tabla, se muestra en la pantalla con un marco parpadeante. Los ángulos y las coordenadas se pueden corregir usando los botones con flechas y rotación de la carta, hacinedo doble clic en la esquina superior izquierda o introduciendo las coordenadas manualmente.
+
+8. En la esquina inferior derecha, puedes activar la visualización de los bordes combinados de la carta, desplazandolo es fácil controla y corregir el ángulo de posicionamiento.
+
+9. Esta tabla se almacena en el archivo .INI con el nombre de la imagen y se carga automáticamente cuando la imagen se vuelve a cargar.
+
+10. Las cartas se exportan en el mismo bloque que en la imagen original (por ejemplo 3x3), con la opción [Split] puedes cambiar el bloque de exportación o guardar las cartas por separado en archivos independientes
+
+11. [Frame] - Dibuja un marco de un solo color sobre la carta, [Round rect] - redondea las esquinas del marco, el color se selecciona en la imagen original. Si los elementos visibles de la carta están lejos de su borde, puedes asignar un marco para posicionamiento de forma manual y ponerlo a cero antes de exportar.
+
+12. [Cutting line] añade líneas de corte al exportar
+
+13. Los parámetros [Border], [Interval] especifican la colocación de cartas durante la exportación, [Mirror] rellena los intervalos entre cartas
+
+14. Todas las acciones se pueden realizar desde la primera pestaña [Source]. En cualquier momento se puede puede revisar la vista general de las cartas alineadas en la pestaña [Result].
+
+15. La pestaña [Selected] permite visualizar una carta alineada y centrarse en algún elemento vertical para especificar el grado de rotación combinando la imagen con el bloque agrandado cuando se pulsa el botón del ratón.
+
+
+
+Descargar ZIP: https://drive.google.com/uc?export=download&id=184IyC4-gFkQ0Q736e0QI3tuhHf7DS2sF
+
+Videos de reconocimiento manual y automático (en silencio): 
+Alineación automática: https://drive.google.com/file/d/1iyYTXrWPTmzdQrbcdIca1a4YZKekJi7p/view?usp=sharing
+Alineación manual: https://drive.google.com/file/d/17JVPFh35kgYMZd3yozGG5NLmIcq-S2WK/view?us%20p=sharing
+
+
+Autor - Dmitry Yatsenko (yatcenko@gmail.com)
+Entorno de desarrollo: Delphi 7 (Win32)
