@@ -2,7 +2,7 @@ object MainForm: TMainForm
   Left = 89
   Top = 206
   Caption = 'Cards scan arrange (PnP)'
-  ClientHeight = 723
+  ClientHeight = 722
   ClientWidth = 1006
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -27,27 +27,30 @@ object MainForm: TMainForm
   object Splitter2: TSplitter
     Left = 818
     Top = 0
-    Height = 723
+    Height = 722
     Align = alRight
     OnMoved = Splitter2Moved
+    ExplicitHeight = 723
   end
   object pcMain: TPageControl
     Left = 0
     Top = 0
     Width = 818
-    Height = 723
+    Height = 722
     ActivePage = tsSource
     Align = alClient
     TabOrder = 0
     TabPosition = tpBottom
     OnChange = pcMainChange
+    ExplicitHeight = 723
     object tsSource: TTabSheet
       Caption = 'Source'
+      ExplicitHeight = 697
       object ScrollBox1: TScrollBox
         Left = 0
         Top = 28
         Width = 810
-        Height = 669
+        Height = 668
         HorzScrollBar.Style = ssFlat
         HorzScrollBar.Tracking = True
         VertScrollBar.Style = ssFlat
@@ -56,6 +59,7 @@ object MainForm: TMainForm
         ParentShowHint = False
         ShowHint = True
         TabOrder = 0
+        ExplicitHeight = 669
         object imgSource: TImage
           Left = 0
           Top = 0
@@ -72,7 +76,7 @@ object MainForm: TMainForm
           Left = 0
           Top = 0
           Width = 806
-          Height = 665
+          Height = 664
           Cursor = crCross
           Align = alClient
           OnClick = imgSourceClick
@@ -232,7 +236,7 @@ object MainForm: TMainForm
         end
         object cbFrameOrGround: TComboBox
           Left = 378
-          Top = 2
+          Top = 0
           Width = 71
           Height = 21
           Style = csDropDownList
@@ -257,7 +261,7 @@ object MainForm: TMainForm
         end
         object ColorBox1: TColorBox
           Left = 496
-          Top = 2
+          Top = 0
           Width = 80
           Height = 22
           Selected = clLime
@@ -267,7 +271,7 @@ object MainForm: TMainForm
         end
         object ColorBox2: TColorBox
           Left = 576
-          Top = 2
+          Top = 0
           Width = 80
           Height = 22
           Selected = clGreen
@@ -288,7 +292,7 @@ object MainForm: TMainForm
         end
         object cbAnchor: TComboBox
           Left = 703
-          Top = 2
+          Top = 0
           Width = 71
           Height = 21
           Hint = 'Rotation anchor'
@@ -306,15 +310,17 @@ object MainForm: TMainForm
     object tsResult: TTabSheet
       Caption = 'Result'
       ImageIndex = 1
+      ExplicitHeight = 697
       object ScrollBox2: TScrollBox
         Left = 0
         Top = 0
         Width = 810
-        Height = 697
+        Height = 696
         HorzScrollBar.Tracking = True
         VertScrollBar.Tracking = True
         Align = alClient
         TabOrder = 0
+        ExplicitHeight = 697
         object imgResult: TImage
           Left = 3
           Top = 4
@@ -328,13 +334,15 @@ object MainForm: TMainForm
       Caption = 'tsBuffer'
       ImageIndex = 2
       TabVisible = False
+      ExplicitHeight = 697
       object ScrollBox3: TScrollBox
         Left = 0
         Top = 0
         Width = 810
-        Height = 697
+        Height = 696
         Align = alClient
         TabOrder = 0
+        ExplicitHeight = 697
         object imgBuffer: TImage
           Left = 0
           Top = 0
@@ -348,15 +356,17 @@ object MainForm: TMainForm
     object tsSelected: TTabSheet
       Caption = 'Selected'
       ImageIndex = 3
+      ExplicitHeight = 697
       object ScrollBox4: TScrollBox
         Left = 0
         Top = 0
         Width = 810
-        Height = 697
+        Height = 696
         HorzScrollBar.Tracking = True
         VertScrollBar.Tracking = True
         Align = alClient
         TabOrder = 0
+        ExplicitHeight = 697
         object img1: TImage
           Left = 0
           Top = 0
@@ -385,19 +395,21 @@ object MainForm: TMainForm
     Left = 821
     Top = 0
     Width = 185
-    Height = 723
+    Height = 722
     Align = alRight
     BevelOuter = bvNone
     Constraints.MinWidth = 185
     TabOrder = 1
+    ExplicitHeight = 723
     object pnParams: TPanel
       Left = 0
       Top = 0
       Width = 185
-      Height = 703
+      Height = 702
       Align = alClient
       BorderWidth = 5
       TabOrder = 0
+      ExplicitHeight = 703
       object gbFile: TGroupBox
         Left = 6
         Top = 6
@@ -426,7 +438,7 @@ object MainForm: TMainForm
           Width = 169
           Height = 29
           ButtonHeight = 28
-          ButtonWidth = 31
+          ButtonWidth = 17
           Caption = 'ToolBar3'
           Font.Charset = DEFAULT_CHARSET
           Font.Color = clWindowText
@@ -438,7 +450,7 @@ object MainForm: TMainForm
           ShowCaptions = True
           ShowHint = True
           TabOrder = 0
-          object ToolButton22: TToolButton
+          object tbtLoad: TToolButton
             Left = 0
             Top = 0
             Hint = 'Load'
@@ -446,37 +458,45 @@ object MainForm: TMainForm
             ImageIndex = 0
             OnClick = sbSourceClick
           end
-          object ToolButton26: TToolButton
-            Left = 31
+          object tbtSave: TToolButton
+            Left = 17
             Top = 0
             Hint = 'Save'
             Caption = '<'
             ImageIndex = 3
             OnClick = Button1Click
           end
-          object ToolButton24: TToolButton
-            Left = 62
+          object tbtSaveIni: TToolButton
+            Left = 34
             Top = 0
-            Hint = 'Saqve INI'
+            Hint = 'Save INI'
             Caption = '='
             ImageIndex = 1
             OnClick = Button2Click
           end
           object ToolButton27: TToolButton
-            Left = 93
+            Left = 51
             Top = 0
             Width = 8
             Caption = 'ToolButton27'
             ImageIndex = 3
             Style = tbsSeparator
           end
-          object ToolButton25: TToolButton
-            Left = 101
+          object tbtRotate: TToolButton
+            Left = 59
             Top = 0
             Hint = 'Rotate 90'
             Caption = #1050
             ImageIndex = 2
-            OnClick = ToolButton25Click
+            OnClick = tbtRotateClick
+          end
+          object tbtSplit: TToolButton
+            Left = 76
+            Top = 0
+            Hint = 'Split to paper-size'
+            Caption = '#'
+            ImageIndex = 3
+            OnClick = tbtSplitClick
           end
         end
       end
@@ -825,13 +845,14 @@ object MainForm: TMainForm
         Left = 6
         Top = 407
         Width = 173
-        Height = 276
+        Height = 275
         Align = alClient
         Caption = 'Cards'
         TabOrder = 3
+        ExplicitHeight = 276
         object imgPreview: TImage
           Left = 2
-          Top = 174
+          Top = 173
           Width = 169
           Height = 100
           Align = alBottom
@@ -840,7 +861,7 @@ object MainForm: TMainForm
         end
         object Splitter1: TSplitter
           Left = 2
-          Top = 170
+          Top = 169
           Width = 169
           Height = 4
           Cursor = crVSplit
@@ -967,7 +988,7 @@ object MainForm: TMainForm
           Left = 2
           Top = 74
           Width = 169
-          Height = 96
+          Height = 95
           Align = alClient
           ColCount = 4
           Ctl3D = False
@@ -979,16 +1000,18 @@ object MainForm: TMainForm
           TabOrder = 2
           OnClick = sgCardsClick
           OnSetEditText = sgCardsSetEditText
+          ExplicitHeight = 96
         end
       end
       object Panel3: TPanel
         Left = 6
-        Top = 683
+        Top = 682
         Width = 173
         Height = 14
         Align = alBottom
         BevelOuter = bvNone
         TabOrder = 4
+        ExplicitTop = 683
         object CheckBox1: TCheckBox
           Left = 8
           Top = -1
@@ -1002,12 +1025,13 @@ object MainForm: TMainForm
     end
     object pnXY: TPanel
       Left = 0
-      Top = 703
+      Top = 702
       Width = 185
       Height = 20
       Align = alBottom
       BevelOuter = bvNone
       TabOrder = 1
+      ExplicitTop = 703
     end
   end
   object OpenPictureDialog1: TOpenPictureDialog
@@ -1031,7 +1055,7 @@ object MainForm: TMainForm
     Left = 316
     Top = 132
     Bitmap = {
-      494C01010D001800100010001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
+      494C01010D001800140010001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
       0000000000003600000028000000400000004000000001002000000000000040
       0000000000000000000000000000000000000000000000000000000000000000
       0000000000000000000000000000000000000000000000000000000000000000

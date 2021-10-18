@@ -123,13 +123,14 @@ type
     chbResult: TCheckBox;
     cbFrameOrGround: TComboBox;
     ToolBar3: TToolBar;
-    ToolButton22: TToolButton;
-    ToolButton24: TToolButton;
-    ToolButton25: TToolButton;
-    ToolButton26: TToolButton;
+    tbtLoad: TToolButton;
+    tbtSaveIni: TToolButton;
+    tbtRotate: TToolButton;
+    tbtSave: TToolButton;
     ToolButton27: TToolButton;
     Panel4: TPanel;
     cbAnchor: TComboBox;
+    tbtSplit: TToolButton;
     procedure imgSourceMouseMove(Sender: TObject; Shift: TShiftState; X,
       Y: Integer);
     procedure imgSourceClick(Sender: TObject);
@@ -193,7 +194,8 @@ type
     procedure chbDimensionClick(Sender: TObject);
     procedure chbResultClick(Sender: TObject);
     procedure Splitter2Moved(Sender: TObject);
-    procedure ToolButton25Click(Sender: TObject);
+    procedure tbtRotateClick(Sender: TObject);
+    procedure tbtSplitClick(Sender: TObject);
   private
     { Private declarations }
     fGetColor:boolean;
@@ -242,7 +244,7 @@ var
 
 implementation
 
-uses jpeg,math, Types, u_ProgressForm;
+uses jpeg,math, Types, u_ProgressForm, u_SplitForm;
 
 
 {$R *.dfm}
@@ -1002,15 +1004,15 @@ procedure Frame;
 
 end;
 
-  procedure Split(AFIleName:string;x,y:integer);
+  procedure Split(AFIleName:string;x,y, Ableed:integer);
   var png : tpngobject;
-    i:Integer;
+    bleed,i:Integer;
     s:string;
     procedure ResetPng;
     begin
   png.TransparentColor := clMaroon;
   png.canvas.brush.Style := bsSolid;
-  if chbCuttingLine.Checked then
+  if chbCuttingLine.Checked or (Ableed>0) then
     png.Canvas.Brush.Color := clWhite
   else
     png.Canvas.Brush.Color := shFrameColor.pen.color;
@@ -1041,7 +1043,7 @@ end;
   png.PixelInformation.UnitType := utMeter;
 
 
-   ResetPng;
+  ResetPng;
 
 
   for i:= 1 to sgCards.RowCount-1 do
@@ -1058,7 +1060,6 @@ end;
     p2 := Point(p1.X + seSizeX.Value, p1.Y + seSizeY.Value);
 
 
-
     if chbCuttingLine.Checked or (seFrameX.Value>0)or (seFrameY.Value>0)  then
     png.Canvas.CopyRect(
       Rect(p1.X+1,p1.Y+1, p2.X-1,p2.y-1),
@@ -1069,6 +1070,30 @@ end;
       Rect(p1.X-1,p1.Y-1, p2.X-1,p2.y-1),
       img1.Picture.Bitmap.Canvas,
       Rect(0,0,seSizeX.Value-1 ,seSizey.Value-1));
+
+    if ABleed >0 then
+    begin
+      Bleed := ABleed + seBorder.Value;
+      png.Canvas.Pen.Color := rgb(0,0,0);
+      png.Canvas.Pen.Width := 1;
+      png.Canvas.Pen.Style := psSolid;
+      png.Canvas.Brush.Style := bsClear;
+
+      png.Canvas.Rectangle(0,0,Bleed,bleed);
+      png.Canvas.Rectangle(png.Width,0,png.Width - Bleed,bleed);
+      png.Canvas.Rectangle(png.Width,png.Height,png.Width - Bleed,png.Height-bleed);
+      png.Canvas.Rectangle(0,png.Height,bleed,png.Height-bleed);
+
+      png.Canvas.Pen.Color := rgb(255,255,255);
+
+      png.Canvas.Rectangle(0,0,Bleed-1,bleed-1);
+      png.Canvas.Rectangle(png.Width,0,png.Width - Bleed+1,bleed-1);
+
+      png.Canvas.Rectangle(png.Width,png.Height,png.Width - Bleed+1,png.Height-bleed+1);
+      png.Canvas.Rectangle(0,png.Height, bleed-1, png.Height-bleed+1);
+
+    end;
+
 
     if (i=sgCards.RowCount-1) or (i mod (X*Y)=0) then
     begin
@@ -1091,9 +1116,12 @@ begin
   begin
     SaveIniFile(fFileName+'.INI', True);
     if not chbSplit.Checked then
-      Split(SavePictureDialog1.filename, seCountX.Value, seCountY.Value)
+      Split(SavePictureDialog1.filename, seCountX.Value, seCountY.Value,0)
     else
-      Split(SavePictureDialog1.filename, seSplitX.Value, seSplitY.Value);
+    if (seDeltaX.Value=seDeltaY.Value)and (seDeltaX.Value<0) then
+      Split(SavePictureDialog1.filename, seSplitX.Value, seSplitY.Value,-seDeltaX.Value)
+    else
+      Split(SavePictureDialog1.filename, seSplitX.Value, seSplitY.Value,0);
   end;
 end;
 
@@ -1216,7 +1244,11 @@ begin
 
   OpenPictureDialog1.FileName := AFilename;
 
-    if Assigned(Img) then Img.Free;
+    if Assigned(Img) then
+      Img.Free;
+
+    imgSource.Picture.Bitmap.Width:=1;
+    imgSource.Picture.Bitmap.Height:=1;
 
     ext:=UpperCase(ExtractFileExt(AFilename));
     if ext='.PNG' then
@@ -1224,12 +1256,15 @@ begin
       img := TPngObject.create;
       img.LoadFromFile(AFilename);
       imgSource.Picture.Bitmap.Assign(img);
+      if TPngObject(img).HasPixelInformation then
+        seDPI.Value := Round(TPngObject(img).PixelInformation.PPUnitX * 0.02540);
     end;
     if (ext='.JPG')or(ext='.JPEG') then
     begin
       img := TJPEGImage.create;
       img.LoadFromFile(AFilename);
       imgSource.Picture.Bitmap.Assign(img);
+//      TJPEGImage(img).
     end;
     if (ext='.BMP') then
     begin
@@ -2077,7 +2112,7 @@ begin
   end;
 end;
 
-procedure TMainForm.ToolButton25Click(Sender: TObject);
+procedure TMainForm.tbtRotateClick(Sender: TObject);
 type
   TRGBArray = array[0..0] of TRGBTriple;
   pRGBArray = ^TRGBArray;
@@ -2106,6 +2141,70 @@ begin
   imgSource.Picture.Assign(tmpBitmap);
 
   tmpBitmap.free;
+end;
+
+procedure TMainForm.tbtSplitClick(Sender: TObject);
+var z,n:integer;
+begin
+  SplitForm.ImageSize := Point(imgSource.Picture.Bitmap.Width, imgSource.Picture.Bitmap.Height);
+
+  SplitForm.DPI := seDPI.Value;
+  if SplitForm.ShowModal=mrOk then
+  begin
+
+
+    if SplitForm.cfgPrint.Values['Split.Width']='max' then
+    begin
+      z := StrToIntDef(SplitForm.cfgPrint.Strings.Values['Page.Width'],0)
+         - StrToIntDef(SplitForm.cfgPrint.Strings.Values['Margins.Left'],0)
+         - StrToIntDef(SplitForm.cfgPrint.Strings.Values['Margins.Right'],0)
+         - 2*StrToIntDef(SplitForm.cfgPrint.Values['Bleed'],0);
+      if z<1 then abort;
+      seCountX.Value := Ceil(imgSource.Picture.Bitmap.Width/SplitForm.DPI * 25.4 / z);
+      seSizeX.Value := imgSource.Picture.Bitmap.Width div seCountX.Value;
+    end
+    else begin
+      z := StrToIntDef(SplitForm.cfgPrint.Values['Split.Width'],0);
+      if z<1 then abort;
+      seCountX.Value := Ceil(imgSource.Picture.Bitmap.Width/SplitForm.DPI * 25.4 / z);
+      seSizeX.Value := Round(z * SplitForm.DPI / 25.4) ;
+    end;
+
+    if SplitForm.cfgPrint.Values['Split.Height']='max' then
+    begin
+      z := StrToIntDef(SplitForm.cfgPrint.Strings.Values['Page.Height'],0)
+         - StrToIntDef(SplitForm.cfgPrint.Strings.Values['Margins.Top'],0)
+         - StrToIntDef(SplitForm.cfgPrint.Strings.Values['Margins.Bottom'],0)
+         - 2*StrToIntDef(SplitForm.cfgPrint.Values['Bleed'],0);
+      if z<1 then abort;
+      seCountY.Value := Ceil(imgSource.Picture.Bitmap.Height/SplitForm.DPI * 25.4 / z);
+      seSizeY.Value := imgSource.Picture.Bitmap.Height div seCountY.Value;
+    end
+    else begin
+      z := StrToIntDef(SplitForm.cfgPrint.Values['Split.Height'],0);
+      if z<1 then abort;
+      seCountY.Value := Ceil(imgSource.Picture.Bitmap.Height/SplitForm.DPI * 25.4 / z);
+      seSizeY.Value := round(z * SplitForm.DPI / 25.4);
+    end;
+    seDeltaX.Value := round(-StrToIntDef(SplitForm.cfgPrint.Values['Bleed'],0)* SplitForm.DPI / 25.4);
+    seDeltaY.Value := round(-StrToIntDef(SplitForm.cfgPrint.Values['Bleed'],0)* SplitForm.DPI / 25.4);
+
+    Resetgrid1Click(nil);
+
+    seSizeX.Value := round(seSizeX.Value + 2 * StrToIntDef(SplitForm.cfgPrint.Values['Bleed'],0) * SplitForm.DPI / 25.4) ;
+    seSizeY.Value := round(seSizeY.Value + 2 * StrToIntDef(SplitForm.cfgPrint.Values['Bleed'],0) * SplitForm.DPI / 25.4) ;
+
+    seFrameX.Value := 0;
+    seFrameY.Value := 0;
+    chbRoundRect.Checked := False;
+    chbCuttingLine.Checked := False;
+    chbSplit.Checked := True;
+    seSplitX.Value := 1;
+    seSplitY.Value := 1;
+    seBorder.Value :=0;
+
+
+  end;
 end;
 
 procedure TMainForm.ToolButton16Click(Sender: TObject);
