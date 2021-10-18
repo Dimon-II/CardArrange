@@ -20,6 +20,7 @@ Open-source software, free software
 13. Cutting line adds cut marks when exporting
 14. Parameters Border, Interval specify the placement of cards during export, Mirror fills the interval between cards.
 15. The Selected tab allows you to see already rotated card and focusing on some vertical element to specify the degree of rotation by combining the image in the enlarged block when the mouse button is pressed.
+16. The new "scissors" button allows to split a large image into separate sheets of a given size (you can use the paper settings of your printer) with "bleed" for cropping.
 
 Author - Dmitry Yatsenko (yatcenko@gmail.com)
-Development environment: Delphi 7 (Win32)
+Development environment: Delphi 2007 (Win32)

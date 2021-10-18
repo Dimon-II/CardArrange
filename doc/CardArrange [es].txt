@@ -39,7 +39,7 @@ Cómo funciona:
 
 15. La pestaña [Selected] permite visualizar una carta alineada y centrarse en algún elemento vertical para especificar el grado de rotación combinando la imagen con el bloque agrandado cuando se pulsa el botón del ratón.
 
-
+16. El nuevo botón [tijeras] permite dividir una imagen grande en hojas separadas de un tamaño determinado (puede utilizar la configuración de papel de su impresora) con [Bleed] para recortar.
 
 Descargar ZIP: https://drive.google.com/uc?export=download&id=184IyC4-gFkQ0Q736e0QI3tuhHf7DS2sF
 
@@ -49,4 +49,4 @@ Alineación manual: https://drive.google.com/file/d/17JVPFh35kgYMZd3yozGG5NLmIcq
 
 
 Autor - Dmitry Yatsenko (yatcenko@gmail.com)
-Entorno de desarrollo: Delphi 7 (Win32)
+Entorno de desarrollo: Delphi 2007 (Win32)
