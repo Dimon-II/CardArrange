@@ -131,6 +131,7 @@ type
     Panel4: TPanel;
     cbAnchor: TComboBox;
     tbtSplit: TToolButton;
+    tbHideLines: TToolButton;
     procedure imgSourceMouseMove(Sender: TObject; Shift: TShiftState; X,
       Y: Integer);
     procedure imgSourceClick(Sender: TObject);
@@ -196,6 +197,9 @@ type
     procedure Splitter2Moved(Sender: TObject);
     procedure tbtRotateClick(Sender: TObject);
     procedure tbtSplitClick(Sender: TObject);
+    procedure sgCardsSelectCell(Sender: TObject; ACol, ARow: Integer;
+      var CanSelect: Boolean);
+    procedure tbHideLinesClick(Sender: TObject);
   private
     { Private declarations }
     fGetColor:boolean;
@@ -213,6 +217,7 @@ type
     ReFrame:boolean;
     FStop: Boolean;
     FOldCorned:string;
+    Cntr:TPoint;
 
     procedure RotateBitmapGDIP(Bmp: TBitmap; Degs: Double;
       AdjustSize: Boolean; BkColor: TColor = clNone);
@@ -236,7 +241,8 @@ type
     function Zm(P:TPoint):TPoint;
 
     property Stop:Boolean read FStop write SetStop;
-    procedure CenterAxis(da:double);
+    procedure CenterAxis(a:double);
+    procedure CalcCenter;
   end;
 
 var
@@ -244,7 +250,7 @@ var
 
 implementation
 
-uses jpeg,math, Types, u_ProgressForm, u_SplitForm;
+uses jpeg,math, Types, u_ProgressForm, u_SplitForm, CommCtrl;
 
 
 {$R *.dfm}
@@ -314,6 +320,7 @@ begin
   begin
     pcMain.ActivePageIndex := 0;
     LoadImage(OpenPictureDialog1.FileName);
+    CalcCenter;
   end;
 end;
 
@@ -447,8 +454,10 @@ begin
   p4 := Point(x + Round(seSizeX.Value*Cos(a/180*Pi)) - Round(seSizeY.Value*Sin(a/180*Pi))
              ,y + Round(seSizeX.Value*sin(a/180*Pi) + Round(seSizeY.Value*Cos(a/180*Pi))));
 
-
+  FrameBox.Canvas.Pen.Width := 1;
   FrameBox.Canvas.Polyline([Zm(p1),Zm(p2),Zm(p4),Zm(p3),Zm(p1)]);
+  FrameBox.Canvas.Pen.Width := 3;
+  FrameBox.Canvas.Polyline([Zm(p1),Zm(p2)]);
 {
   DrawAntialisedLine(FrameBox.Canvas, Zm(p1).X, Zm(p1).y, Zm(p2).X, Zm(p2).y,  FrameBox.Canvas.Pen.Color);
   DrawAntialisedLine(FrameBox.Canvas, Zm(p4).X, Zm(p4).y, Zm(p2).X, Zm(p2).y,  FrameBox.Canvas.Pen.Color);
@@ -518,8 +527,15 @@ begin
 end;
 
 procedure TMainForm.Timer1Timer(Sender: TObject);
+var
+  i:integer;
+  Button: TTBButton;
+  Btn:TToolButton;
+  Tmr:integer;
+
 begin
-  if (pcMain.ActivePageIndex = 0) and not Shape2.Visible then
+  Tmr:=500;
+if {pcMain.ActivePageIndex = 0) and}not Shape2.Visible then
   begin
   DrawFrame(StrToIntDef(sgCards.Cells[1, sgCards.Row],0),
     StrToIntDef(sgCards.Cells[2, sgCards.Row],0),
@@ -536,6 +552,26 @@ begin
     +'/' + FormatFloat('0.0', 25.4 / seDPI.Value *(seBorder.Value*2 + seSizeY.Value * seCountY.Value + seCountY.Value -1 + seInterval.Value * (seCountY.Value -1)))
     +^M'A4 210/297';
 
+  if Sender <> nil then
+  for I := 0 to ComponentCount - 1 do
+    if Components[i] is TToolButton then
+    begin
+      Btn := TToolButton(Components[i]);
+        if Btn.Action <> Nil then
+          if (Btn.Action as TAction).Category='Move' then
+          begin
+            if TToolBar(Btn.Parent).Perform(TB_GETBUTTON, Btn.Index, Longint(@Button)) <> 0 then
+            begin
+              if (Button.fsState = 6)  then
+              begin
+                Btn.Action.Execute;
+                Tmr:=5;
+              end;
+            end;
+          end;
+    end;
+  if Timer1.Interval<>Tmr then
+    Timer1.Interval:=Tmr;
 end;
 
 procedure TMainForm.Action1Update(Sender: TObject);
@@ -556,6 +592,7 @@ begin
   sgCards.Cells[1, sgCards.Row] := IntToStr(
    StrToIntDef(sgCards.Cells[1, sgCards.Row],0) - Stepx[TrackBar2.Position]
   );
+  CalcCenter;
   Timer1Timer(nil)
 end;
 
@@ -564,6 +601,7 @@ begin
   sgCards.Cells[1, sgCards.Row] := IntToStr(
    StrToIntDef(sgCards.Cells[1, sgCards.Row],0) + Stepx[TrackBar2.Position]
   );
+  CalcCenter;
   Timer1Timer(nil)
 end;
 
@@ -572,8 +610,8 @@ begin
   sgCards.Cells[2, sgCards.Row] := IntToStr(
    StrToIntDef(sgCards.Cells[2, sgCards.Row],0) - Stepx[TrackBar2.Position]
   );
+  CalcCenter;
   Timer1Timer(nil)
-
 end;
 
 procedure TMainForm.Action4Execute(Sender: TObject);
@@ -581,64 +619,62 @@ begin
   sgCards.Cells[2, sgCards.Row] := IntToStr(
    StrToIntDef(sgCards.Cells[2, sgCards.Row],0) + Stepx[TrackBar2.Position]
   );
+  CalcCenter;
   Timer1Timer(nil)
-
 end;
 
-procedure TMainForm.CenterAxis(da:double);
-var x,y:integer;
-  p:TPoint;
-  a:double;
-
-begin
-  x := StrToIntDef(sgCards.Cells[1, sgCards.Row],0);
-  y := StrToIntDef(sgCards.Cells[2, sgCards.Row],0);
-  a := StrToFloatDef(sgCards.Cells[3, sgCards.Row],0);
-  p := Point(x + Round(seSizeX.Value*Cos(a/180*Pi))
-               - Round(seSizeY.Value*Sin(a/180*Pi))
-             ,y + Round(seSizeX.Value*sin(a/180*Pi)
-                + Round(seSizeY.Value*Cos(a/180*Pi))));
-
-  x := (x + p4.x) div 2
-     - Round((seSizeX.Value/2)*Cos((a+da)/180*Pi))
-     + Round((seSizeY.Value/2)*Sin((a+da)/180*Pi));
-  y := (y + p4.y) div 2
-     - Round(seSizeX.Value/2*sin((a+da)/180*Pi) + Round(seSizeY.Value/2*Cos((a+da)/180*Pi)));
-
-  sgCards.Cells[1, sgCards.Row] := IntToStr(x);
-  sgCards.Cells[2, sgCards.Row] := IntToStr(y);
-
-
-end;
 
 procedure TMainForm.Action5Execute(Sender: TObject);
+var a:double;
 begin
+  a := StrToFloatDef(sgCards.Cells[3, sgCards.Row],0) - Stepa[TrackBar1.Position];
+  while a>360 do a:=a-360;
+  while a<-360 do a:=a+360;
+  sgCards.Cells[3, sgCards.Row] := FloatToStr(a);
   if cbAnchor.ItemIndex=1 then
-     CenterAxis(- Stepa[TrackBar1.Position]);
-
-  sgCards.Cells[3, sgCards.Row] := FloatToStr(
-   StrToFloatDef(sgCards.Cells[3, sgCards.Row],0) - Stepa[TrackBar1.Position]
-  );
-
-
+     CenterAxis(a);
   Timer1Timer(nil)
 end;
 
 procedure TMainForm.Action6Execute(Sender: TObject);
+var a:double;
 begin
-  if cbAnchor.ItemIndex=1 then
-     CenterAxis(Stepa[TrackBar1.Position]);
 
-  sgCards.Cells[3, sgCards.Row] := FloatToStr(
-   StrToFloatDef(sgCards.Cells[3, sgCards.Row],0) + Stepa[TrackBar1.Position]
-  );
+  a := StrToFloatDef(sgCards.Cells[3, sgCards.Row],0) + Stepa[TrackBar1.Position];
+
+  while a>360 do a:=a-360;
+  while a<-360 do a:=a+360;
+  sgCards.Cells[3, sgCards.Row] := FloatToStr(a);
+  if cbAnchor.ItemIndex=1 then
+     CenterAxis(A);
+
   Timer1Timer(nil)
 end;
 
 procedure TMainForm.sgCardsClick(Sender: TObject);
+var p0,p1,p2,p3,p4:TPoint;
+   a:double;
 begin
-  ScrollBox1.HorzScrollBar.Position := round(StrToIntDef(sgCards.Cells[1, sgCards.Row],0)*Scale)-30;
-  ScrollBox1.VertScrollBar.Position := round(StrToIntDef(sgCards.Cells[2, sgCards.Row],0)*Scale)-30;
+//  ScrollBox1.HorzScrollBar.Position := round(StrToIntDef(sgCards.Cells[1, sgCards.Row],0)*Scale)-30;
+//  ScrollBox1.VertScrollBar.Position := round(StrToIntDef(sgCards.Cells[2, sgCards.Row],0)*Scale)-30;
+
+
+  p1.X := StrToIntDef(sgCards.Cells[1, sgCards.Row],0);
+  p1.Y := StrToIntDef(sgCards.Cells[2, sgCards.Row],0);
+  a := StrToFloatDef(sgCards.Cells[3, sgCards.Row],0);
+
+  p2 := Point(p1.x + Round(seSizeX.Value*Cos(a/180*Pi)),
+              p1.y + Round(seSizeX.Value*sin(a/180*Pi)));
+  p3 := Point(p1.x - Round(seSizeY.Value*Sin(a/180*Pi)),
+              p1.y + Round(seSizeY.Value*Cos(a/180*Pi)));
+  p4 := Point(p1.x + Round(seSizeX.Value*Cos(a/180*Pi)) - Round(seSizeY.Value*Sin(a/180*Pi))
+             ,p1.y + Round(seSizeX.Value*sin(a/180*Pi) + Round(seSizeY.Value*Cos(a/180*Pi))));
+
+  p0.X := MinIntValue([p1.x,p2.x,p3.x,p4.X]);
+  p0.Y := MinIntValue([p1.y,p2.y,p3.y,p4.y]);
+
+  ScrollBox1.HorzScrollBar.Position := round(p0.X *Scale)-30;
+  ScrollBox1.VertScrollBar.Position := round(p0.Y *Scale)-30;
 
   pcMainChange(nil);
 
@@ -1347,20 +1383,17 @@ begin
 end;
 
 procedure TMainForm.DemoCard(x, y, i: integer; a: double;Frm:integer=0);
-var p1,p2,p3,p4:TPoint; BufRect:TRect;
+var p0:TPoint;
+    BufRect:TRect;
+    r:integer;
 begin
-  p1 := Point(x - Round(frm*Cos(a/180*Pi)) + Round(frm*Sin(a/180*Pi))
-             ,y + Round(frm*sin(a/180*Pi) - Round(frm*Cos(a/180*Pi))));
 
-  p2 := Point(p1.x + Round((seSizeX.Value+2*frm)*Cos(a/180*Pi)), p1.y + Round((seSizeX.Value+2*frm)*sin(a/180*Pi)));
-  p3 := Point(p1.x - Round((seSizeY.Value+2*frm)*Sin(a/180*Pi)),p1.y + Round((seSizeY.Value+2*frm)*Cos(a/180*Pi)));
-  p4 := Point(p1.x + Round((seSizeX.Value+2*frm)*Cos(a/180*Pi)) - Round((seSizeY.Value+2*frm)*Sin(a/180*Pi))
-             ,p1.y + Round((seSizeX.Value+2*frm)*sin(a/180*Pi) + Round((seSizeY.Value+2*frm)*Cos(a/180*Pi))));
+  p0 := Point(x + Round(seSizeX.Value/2*Cos(a/180*Pi)) - Round(seSizeY.Value/2*Sin(a/180*Pi))
+             ,y + Round(seSizeX.Value/2*sin(a/180*Pi) + Round(seSizeY.Value/2*Cos(a/180*Pi))));
 
-  BufRect := Rect(Min(Min(p1.X,p2.X),Min(p3.X,p4.X)),
-                  Min(Min(p1.Y,p2.Y),Min(p3.Y,p4.Y)),
-                  Max(Max(p1.X,p2.x),Max(p3.X,p4.x)),
-                  Max(Max(p1.Y,p2.Y),Max(p3.Y,p4.Y)));
+  r := round(sqrt(sqr(seSizeX.Value+2*frm)+sqr(seSizeY.Value+2*frm))/2);
+
+  BufRect :=Rect(p0.x-r,p0.y-r,p0.x+r,p0.y+r);
 
 
   img1.Free;
@@ -1371,7 +1404,7 @@ begin
   img1.OnMouseMove := img1MouseMove;
   img1.OnMouseUp := img1MouseUp;
   ScrollBox4.InsertControl(img1);
-img1.SendToBack;
+  img1.SendToBack;
 
 
   img1.Picture.Bitmap.Width := 1 + (BufRect.Right - BufRect.Left);
@@ -1379,7 +1412,7 @@ img1.SendToBack;
 
   img1.Picture.Bitmap.Canvas.BrushCopy(Rect(0,0,BufRect.Right - BufRect.Left, BufRect.Bottom - BufRect.Top), imgSource.Picture.Bitmap, BufRect, clNone);
 
-  RotateBitmapGDIP(img1.Picture.Bitmap, -a,True, clNone);
+  RotateBitmapGDIP(img1.Picture.Bitmap, -a ,True, clNone);
 
   img1.Picture.Bitmap.Canvas.Pen.Color := ColorBox1.Selected;
   img1.Picture.Bitmap.Canvas.Brush.Style := bsClear;
@@ -1420,6 +1453,7 @@ begin
   Matrix := TGPMatrix.Create;
   try
     Matrix.RotateAt(Degs, MakePoint(0.5 * Bmp.Width, 0.5 * Bmp.Height));
+{
     if AdjustSize then
     begin
       C := Cos(DegToRad(Degs));
@@ -1429,6 +1463,7 @@ begin
       Bmp.Width := NewSize.cx;
       Bmp.Height := NewSize.cy;
     end;
+}    
     Graphs := TGPGraphics.Create(Bmp.Canvas.Handle);
     try
       Graphs.Clear(ColorRefToARGB(ColorToRGB(BkColor)));
@@ -2227,6 +2262,9 @@ begin
 //  FrameBox.Canvas.Lock;
   cnv:=FrameBox.Canvas;
 
+  if tbHideLines.Down then exit;
+
+
   cnv.Pen.Width := 2;
   cnv.Pen.Style := psSolid;
   cnv.Brush.Style := bsClear;
@@ -2283,9 +2321,11 @@ begin
 }
 end;
 
+
 procedure TMainForm.ToolButton8Click(Sender: TObject);
 begin
-Resetgrid1Click(nil)
+  Resetgrid1Click(nil);
+  CalcCenter;
 end;
 
 procedure TMainForm.seSizeXChange(Sender: TObject);
@@ -2302,6 +2342,11 @@ procedure TMainForm.SetStop(const Value: Boolean);
 begin
   FStop := Value;
   if Stop then Abort;
+end;
+
+procedure TMainForm.tbHideLinesClick(Sender: TObject);
+begin
+  FrameBox.Invalidate
 end;
 
 procedure TMainForm.tbOnecardClick(Sender: TObject);
@@ -2337,9 +2382,17 @@ begin
     Shape2.Visible := false;
 end;
 
+
 procedure TMainForm.sgCardsSetEditText(Sender: TObject; ACol, ARow: Integer;
   const Value: String);
 begin
+  if ACol < 3 then
+    CalcCenter
+  else
+  if (cbAnchor.ItemIndex=1)and(ACol=3) then
+  begin
+     CenterAxis(StrToFloatDef(Value,0));
+  end;
   FrameBox.Repaint;
 end;
 
@@ -2403,6 +2456,51 @@ begin
   FOldCorned := '-';
 
 end;
+
+
+procedure TMainForm.CalcCenter;
+var x, y, a:double;
+begin
+
+  x := StrToFloatDef(sgCards.Cells[1, sgCards.Row],0);
+  y := StrToFloatDef(sgCards.Cells[2, sgCards.Row],0);
+  a := StrToFloatDef(sgCards.Cells[3, sgCards.Row],0);
+
+  Cntr.X := Round(x + (seSizeX.Value/2*Cos(a/180*Pi))
+      - (seSizeY.Value/2*Sin(a/180*Pi)));
+  Cntr.Y := Round(y + (seSizeX.Value/2*sin(a/180*Pi)
+      + (seSizeY.Value/2*Cos(a/180*Pi))));
+end;
+
+procedure TMainForm.CenterAxis(a:double);
+var x, y:double;
+begin
+//  a := StrToFloatDef(sgCards.Cells[3, sgCards.Row],0);
+
+  x := Cntr.X
+     - ((seSizeX.Value/2)*Cos((a)/180*Pi))
+     + ((seSizeY.Value/2)*Sin((a)/180*Pi));
+  y := Cntr.Y
+     - (seSizeX.Value/2*sin((a)/180*Pi)
+     + (seSizeY.Value/2*Cos((a)/180*Pi)));
+
+  sgCards.Cells[1, sgCards.Row] := IntToStr(Round(x));
+  sgCards.Cells[2, sgCards.Row] := IntToStr(Round(y));
+//  sgCards.Invalidate;
+//  Application.ProcessMessages;
+
+
+end;
+
+procedure TMainForm.sgCardsSelectCell(Sender: TObject; ACol, ARow: Integer;
+  var CanSelect: Boolean);
+begin
+  CalcCenter;
+end;
+
+
+
+
 
 initialization
   SystemParametersInfo(SPI_GETMOUSESPEED,0, @fDefSpeed, 0);
