@@ -242,7 +242,7 @@ object MainForm: TMainForm
         end
         object cbFrameOrGround: TComboBox
           Left = 401
-          Top = 2
+          Top = 0
           Width = 71
           Height = 21
           Style = csDropDownList
@@ -267,7 +267,7 @@ object MainForm: TMainForm
         end
         object ColorBox1: TColorBox
           Left = 519
-          Top = 2
+          Top = 0
           Width = 80
           Height = 22
           Selected = clLime
@@ -277,7 +277,7 @@ object MainForm: TMainForm
         end
         object ColorBox2: TColorBox
           Left = 599
-          Top = 2
+          Top = 0
           Width = 80
           Height = 22
           Selected = clGreen
@@ -298,7 +298,7 @@ object MainForm: TMainForm
         end
         object cbAnchor: TComboBox
           Left = 726
-          Top = 2
+          Top = 0
           Width = 71
           Height = 21
           Hint = 'Rotation anchor'
@@ -656,7 +656,7 @@ object MainForm: TMainForm
         object chbDimension: TCheckBox
           Left = 4
           Top = 0
-          Width = 69
+          Width = 74
           Height = 17
           Caption = 'Dimension'
           Checked = True
@@ -669,12 +669,12 @@ object MainForm: TMainForm
         Left = 6
         Top = 216
         Width = 173
-        Height = 191
+        Height = 176
         Align = alTop
         TabOrder = 2
         object lblBorder: TLabel
           Left = 8
-          Top = 17
+          Top = 35
           Width = 31
           Height = 13
           Caption = 'Border'
@@ -691,14 +691,14 @@ object MainForm: TMainForm
         end
         object lblInterval: TLabel
           Left = 8
-          Top = 43
+          Top = 59
           Width = 35
           Height = 13
           Caption = 'Interval'
         end
         object Label2: TLabel
-          Left = 8
-          Top = 140
+          Left = 69
+          Top = 153
           Width = 41
           Height = 13
           Caption = 'DPI calc'
@@ -719,7 +719,7 @@ object MainForm: TMainForm
         end
         object seBorder: TSpinEdit
           Left = 44
-          Top = 16
+          Top = 32
           Width = 57
           Height = 22
           MaxValue = 0
@@ -730,7 +730,7 @@ object MainForm: TMainForm
         end
         object sbFrameColor: TPanel
           Left = 8
-          Top = 64
+          Top = 80
           Width = 93
           Height = 23
           Caption = 'Frame color'
@@ -739,29 +739,25 @@ object MainForm: TMainForm
         end
         object chbRoundRect: TCheckBox
           Left = 8
-          Top = 93
+          Top = 106
           Width = 81
           Height = 17
           Caption = 'Round Rect'
-          Checked = True
-          State = cbChecked
-          TabOrder = 3
+          TabOrder = 4
           OnClick = chbRoundRectClick
         end
         object chbCuttingLine: TCheckBox
           Left = 8
-          Top = 109
+          Top = 122
           Width = 97
           Height = 17
           Caption = 'Cutting line'
-          Checked = True
-          State = cbChecked
-          TabOrder = 4
+          TabOrder = 5
           OnClick = chbCuttingLineClick
         end
         object seInterval: TSpinEdit
           Left = 44
-          Top = 40
+          Top = 56
           Width = 57
           Height = 22
           MaxValue = 0
@@ -771,59 +767,46 @@ object MainForm: TMainForm
           OnChange = seFrameChange
         end
         object chkHex: TCheckBox
-          Left = 112
-          Top = 139
-          Width = 51
+          Left = 8
+          Top = 154
+          Width = 40
           Height = 14
-          Caption = 'Hex'
-          TabOrder = 10
-          Visible = False
-        end
-        object seSplitX: TSpinEdit
-          Left = 51
-          Top = 161
-          Width = 57
-          Height = 22
-          MaxValue = 32
-          MinValue = 1
-          TabOrder = 8
-          Value = 1
-        end
-        object seSplitY: TSpinEdit
-          Left = 108
-          Top = 161
-          Width = 57
-          Height = 22
-          MaxValue = 32
-          MinValue = 1
-          TabOrder = 9
-          Value = 1
+          Caption = 'Arc'
+          TabOrder = 7
         end
         object chbSplit: TCheckBox
           Left = 8
-          Top = 166
-          Width = 42
+          Top = 17
+          Width = 57
           Height = 14
-          Caption = 'Split'
-          TabOrder = 7
+          Caption = 'Split x1'
+          Checked = True
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clWindowText
+          Font.Height = -11
+          Font.Name = 'MS Sans Serif'
+          Font.Style = []
+          ParentFont = False
+          State = cbChecked
+          TabOrder = 3
         end
         object chbMirror: TCheckBox
           Left = 8
-          Top = 124
+          Top = 138
           Width = 65
           Height = 15
           Caption = 'Mirror'
-          TabOrder = 5
+          TabOrder = 6
           OnClick = chbMirrorClick
         end
         object seDPI: TSpinEdit
-          Left = 51
-          Top = 135
+          Left = 112
+          Top = 148
           Width = 57
           Height = 22
           MaxValue = 0
           MinValue = 0
-          TabOrder = 6
+          TabOrder = 8
           Value = 300
           OnChange = seDPIChange
         end
@@ -835,21 +818,23 @@ object MainForm: TMainForm
           Caption = 'Result'
           Checked = True
           State = cbChecked
-          TabOrder = 11
+          TabOrder = 9
           OnClick = chbResultClick
         end
       end
       object GroupBox1: TGroupBox
         Left = 6
-        Top = 407
+        Top = 392
         Width = 173
-        Height = 275
+        Height = 290
         Align = alClient
         Caption = 'Cards'
         TabOrder = 3
+        ExplicitTop = 407
+        ExplicitHeight = 275
         object imgPreview: TImage
           Left = 2
-          Top = 173
+          Top = 188
           Width = 169
           Height = 100
           Align = alBottom
@@ -858,7 +843,7 @@ object MainForm: TMainForm
         end
         object Splitter1: TSplitter
           Left = 2
-          Top = 169
+          Top = 184
           Width = 169
           Height = 4
           Cursor = crVSplit
@@ -942,7 +927,6 @@ object MainForm: TMainForm
           Align = alTop
           Alignment = taRightJustify
           BevelOuter = bvNone
-          Caption = '~  '
           Font.Charset = DEFAULT_CHARSET
           Font.Color = clWindowText
           Font.Height = -12
@@ -950,10 +934,38 @@ object MainForm: TMainForm
           Font.Style = [fsBold]
           ParentFont = False
           TabOrder = 1
-          object TrackBar1: TTrackBar
-            Left = 93
+          object SpeedButton1: TSpeedButton
+            Left = 150
             Top = 0
-            Width = 61
+            Width = 16
+            Height = 31
+            Flat = True
+            Glyph.Data = {
+              4A020000424D4A02000000000000360000002800000009000000130000000100
+              1800000000001402000074120000741200000000000000000000FF00FFFF00FF
+              FF00FFFF00FFFF00FFFF00FFFF00FFFF00FFFF00FF00000000000000000000FF
+              00FFFF00FFFF00FFFF00FFFF00FFFF00FF00000000FFFFFFFFFFFF0000000000
+              00000000FF00FFFF00FFFF00FF00000000FFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
+              00000000000000000000000000FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
+              FFFF00000000000000FFFFFFFFFFFFFFFFFFFFFFFF0000FFFFFFFFFFFFFF0000
+              0000000000FFFFFFFFFFFFFFFFFF0000FF0000FF0000FFFFFFFF000000000000
+              00FFFFFFFFFFFF0000FFFFFFFF0000FFFFFFFF0000FF00000000000000FFFFFF
+              FFFFFFFFFFFFFFFFFF0000FFFFFFFFFFFFFF00000000000000FFFFFFFFFFFFFF
+              FFFFFFFFFF0000FFFFFFFFFFFFFF00000000000000FFFFFFFFFFFFFFFFFFFFFF
+              FF0000FFFFFFFFFFFFFF00000000000000FFFFFFFFFFFFFFFFFFFFFFFF0000FF
+              FFFFFFFFFFFF00000000000000FFFFFFFFFFFF0000FFFFFFFF0000FFFFFFFF00
+              00FF00000000000000FFFFFFFFFFFFFFFFFF0000FF0000FF0000FFFFFFFF0000
+              0000000000FFFFFFFFFFFFFFFFFFFFFFFF0000FFFFFFFFFFFFFF000000000000
+              00000000000000FFFFFFFFFFFFFFFFFFFFFFFFFFFFFF00000000FF00FFFF00FF
+              FF00FF000000000000000000FFFFFFFFFFFF00000000FF00FFFF00FFFF00FFFF
+              00FFFF00FFFF00FF00000000000000000000FF00FFFF00FFFF00FFFF00FFFF00
+              FFFF00FFFF00FFFF00FFFF00FF00}
+            OnClick = SpeedButton1Click
+          end
+          object TrackBar1: TTrackBar
+            Left = 64
+            Top = 0
+            Width = 48
             Height = 31
             Hint = 'Turn step (0.02-1'#39')'#13#10'Also autodetect max angle (10-30)'
             Align = alLeft
@@ -968,7 +980,7 @@ object MainForm: TMainForm
           object TrackBar2: TTrackBar
             Left = 0
             Top = 0
-            Width = 93
+            Width = 64
             Height = 31
             Hint = 'Move step(1-100 pix)'
             Align = alLeft
@@ -980,12 +992,30 @@ object MainForm: TMainForm
             TabOrder = 1
             TickMarks = tmTopLeft
           end
+          object seShift: TSpinEdit
+            Left = 108
+            Top = 6
+            Width = 45
+            Height = 22
+            Font.Charset = DEFAULT_CHARSET
+            Font.Color = clWindowText
+            Font.Height = -12
+            Font.Name = 'MS Sans Serif'
+            Font.Style = []
+            MaxValue = 16
+            MinValue = -16
+            ParentFont = False
+            TabOrder = 2
+            Value = 0
+            Visible = False
+            OnChange = seShiftChange
+          end
         end
         object sgCards: TStringGrid
           Left = 2
           Top = 74
           Width = 169
-          Height = 95
+          Height = 110
           Align = alClient
           ColCount = 4
           Ctl3D = False
@@ -998,6 +1028,7 @@ object MainForm: TMainForm
           OnClick = sgCardsClick
           OnSelectCell = sgCardsSelectCell
           OnSetEditText = sgCardsSetEditText
+          ExplicitHeight = 95
         end
       end
       object Panel3: TPanel
@@ -1008,14 +1039,14 @@ object MainForm: TMainForm
         Align = alBottom
         BevelOuter = bvNone
         TabOrder = 4
-        object CheckBox1: TCheckBox
+        object chbCorners: TCheckBox
           Left = 8
           Top = -1
-          Width = 97
+          Width = 121
           Height = 17
           Caption = 'Preview Corners '
           TabOrder = 0
-          OnClick = CheckBox1Click
+          OnClick = chbCornersClick
         end
       end
     end
@@ -1043,6 +1074,7 @@ object MainForm: TMainForm
     DefaultExt = 'PNG'
     Filter = 'Portable Network Graphics (*.png)|*.png'
     InitialDir = '.'
+    Options = [ofHideReadOnly, ofNoChangeDir, ofEnableSizing]
     Left = 688
     Top = 80
   end
@@ -1050,7 +1082,7 @@ object MainForm: TMainForm
     Left = 316
     Top = 132
     Bitmap = {
-      494C01010E001800180010001000FFFFFFFFFF00FFFFFFFFFFFFFFFF424D3600
+      494C01010E001800240010001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
       0000000000003600000028000000400000004000000001002000000000000040
       0000000000000000000000000000000000000000000000000000000000000000
       0000000000000000000000000000000000000000000000000000000000000000
@@ -1582,11 +1614,12 @@ object MainForm: TMainForm
       FFFFFFFFFC7FFC7FFF3FFFFFFC7FFC7FFC3FFCFFFC7FF83FF03FFC3FFC7FF83F
       C000FC0FE00FF01F00000003E00FF01FC0000000F01FE00FF03F0003F01FE00F
       FC3FFC0FF83FFC7FFF3FFC3FF83FFC7FFFFFFCFFFC7FFC7FFFFFFFFFFC7FFC7F
-      FFFFFFFFFEFFFC7FFFFFFFFFFEFFFC7F}
+      FFFFFFFFFEFFFC7FFFFFFFFFFEFFFC7F00000000000000000000000000000000
+      000000000000}
   end
   object Timer1: TTimer
     Enabled = False
-    Interval = 500
+    Interval = 512
     OnTimer = Timer1Timer
     Left = 532
     Top = 176

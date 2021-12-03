@@ -84,8 +84,6 @@ type
     Shape1: TShape;
     img2: TImage;
     ApplicationEvents1: TApplicationEvents;
-    seSplitX: TSpinEdit;
-    seSplitY: TSpinEdit;
     Label3: TLabel;
     chbSplit: TCheckBox;
     chbMirror: TCheckBox;
@@ -116,7 +114,7 @@ type
     Action7: TAction;
     Action8: TAction;
     Panel3: TPanel;
-    CheckBox1: TCheckBox;
+    chbCorners: TCheckBox;
     Splitter1: TSplitter;
     Splitter2: TSplitter;
     chbDimension: TCheckBox;
@@ -132,6 +130,8 @@ type
     cbAnchor: TComboBox;
     tbtSplit: TToolButton;
     tbHideLines: TToolButton;
+    seShift: TSpinEdit;
+    SpeedButton1: TSpeedButton;
     procedure imgSourceMouseMove(Sender: TObject; Shift: TShiftState; X,
       Y: Integer);
     procedure imgSourceClick(Sender: TObject);
@@ -191,7 +191,7 @@ type
     procedure Action8Execute(Sender: TObject);
     procedure Action7Execute(Sender: TObject);
     procedure Splitter1Moved(Sender: TObject);
-    procedure CheckBox1Click(Sender: TObject);
+    procedure chbCornersClick(Sender: TObject);
     procedure chbDimensionClick(Sender: TObject);
     procedure chbResultClick(Sender: TObject);
     procedure Splitter2Moved(Sender: TObject);
@@ -200,6 +200,8 @@ type
     procedure sgCardsSelectCell(Sender: TObject; ACol, ARow: Integer;
       var CanSelect: Boolean);
     procedure tbHideLinesClick(Sender: TObject);
+    procedure seShiftChange(Sender: TObject);
+    procedure SpeedButton1Click(Sender: TObject);
   private
     { Private declarations }
     fGetColor:boolean;
@@ -435,6 +437,56 @@ begin
 end;
 
 procedure TMainForm.DrawFrame;
+
+procedure Ellipse(X,Y,A,B: integer; Angle: single);
+var
+ I,S,C,H2,K1,K2,R: single;
+ X1,X2,Y1,Y2,X3,Y3,X4,Y4,YY: integer;
+begin
+ with FrameBox.Canvas do
+ begin
+ I:=(180-Angle)*PI/180;
+ S:=Sin(I);
+ C:=Cos(I);
+ H2:=Sqr(A*S)+Sqr(B*C);
+ K1:=S*C*(Sqr(A)-Sqr(B))/H2;
+ K2:=A*B/H2;
+ YY:=0;
+ while Sqr(YY)<=H2 do
+   begin
+     R:=K2*Sqrt(H2-Sqr(YY));
+     X1:=Round(K1*YY+R);
+     X2:=Round(K1*YY-R);
+     if YY=0 then
+       begin
+         Pixels[X+X1,Y+YY]:=Pen.Color;
+         Pixels[X-X1,Y-YY]:=Pen.Color;
+       end
+     else
+       begin
+         MoveTo(X+X1,Y+YY);
+         LineTo(X+X3,Y+YY-1);
+         MoveTo(X+X2,Y+YY);
+         LineTo(X+X4,Y+YY-1);
+         MoveTo(X-X1,Y-YY);
+         LineTo(X-X3,Y-YY+1);
+         MoveTo(X-X2,Y-YY);
+         LineTo(X-X4,Y-YY+1);
+       end;
+     X3:=X1;
+     X4:=X2;
+     Inc(YY);
+   end;
+ H2:=Int(1.99*(YY-Sqrt(H2)));
+ MoveTo(X+X3,Y+YY-1);
+ LineTo(X+X3-Round(R),Y+YY-Round(H2));
+ LineTo(X+X4,Y+YY-1);
+ MoveTo(X-X3,Y-YY+1);
+ LineTo(X-X3+Round(R),Y-YY+Round(H2));
+ LineTo(X-X4,Y-YY+1);
+ end;
+end;
+
 begin
   if GreenStyle = psSolid then
   begin
@@ -455,6 +507,16 @@ begin
              ,y + Round(seSizeX.Value*sin(a/180*Pi) + Round(seSizeY.Value*Cos(a/180*Pi))));
 
   FrameBox.Canvas.Pen.Width := 1;
+
+  if chkHex.Checked then
+    Ellipse(
+      Round((p1.X + p4.X) * Scale / 2),
+      Round((p1.Y + p4.Y) * Scale / 2),
+      Round(max(seSizeX.Value, seSizeY.Value) * Scale/2 ),
+      Round(max(seSizeX.Value, seSizeY.Value) * Scale/2 ),
+      a
+    );
+
   FrameBox.Canvas.Polyline([Zm(p1),Zm(p2),Zm(p4),Zm(p3),Zm(p1)]);
   FrameBox.Canvas.Pen.Width := 3;
   FrameBox.Canvas.Polyline([Zm(p1),Zm(p2)]);
@@ -485,11 +547,13 @@ begin
   then
   FrameBox.Canvas.Polyline([Zm(p11),Zm(p12),Zm(p14),Zm(p13),Zm(p11)]);
 
+  if Timer1.Interval = 512 then
+
   if imgPreview.Visible and
-  (FOldCorned <> sgCards.Rows[sgCards.Row].CommaText + ','+seSizeX.Text + ','+seSizeY.Text)
+  (FOldCorned <> sgCards.Rows[sgCards.Row].CommaText + ','+seSizeX.Text + ','+seSizeY.Text+','+seShift.Text)
   then
   begin
-    FOldCorned:= sgCards.Rows[sgCards.Row].CommaText+ ','+seSizeX.Text + ','+seSizeY.Text;
+    FOldCorned:= sgCards.Rows[sgCards.Row].CommaText+ ','+seSizeX.Text + ','+seSizeY.Text+','+seShift.Text;
 
     DemoCard(StrToIntDef(sgCards.Cells[1, sgCards.Row],0),
       StrToIntDef(sgCards.Cells[2, sgCards.Row],0),0,
@@ -534,7 +598,8 @@ var
   Tmr:integer;
 
 begin
-  Tmr:=500;
+  Tmr:=512;
+//  Timer1.Enabled:=False;
 if {pcMain.ActivePageIndex = 0) and}not Shape2.Visible then
   begin
   DrawFrame(StrToIntDef(sgCards.Cells[1, sgCards.Row],0),
@@ -550,7 +615,7 @@ if {pcMain.ActivePageIndex = 0) and}not Shape2.Visible then
      +'/' + FormatFloat('0.0', 25.4 / seDPI.Value * seSizeY.value )
      +^M +  FormatFloat('0.0', 25.4 / seDPI.Value * (seBorder.Value*2 + seSizeX.Value * seCountX.Value + seCountX.Value -1 + seInterval.Value * (seCountX.Value -1)))
     +'/' + FormatFloat('0.0', 25.4 / seDPI.Value *(seBorder.Value*2 + seSizeY.Value * seCountY.Value + seCountY.Value -1 + seInterval.Value * (seCountY.Value -1)))
-    +^M'A4 210/297';
+;
 
   if Sender <> nil then
   for I := 0 to ComponentCount - 1 do
@@ -565,13 +630,15 @@ if {pcMain.ActivePageIndex = 0) and}not Shape2.Visible then
               if (Button.fsState = 6)  then
               begin
                 Btn.Action.Execute;
-                Tmr:=5;
+                if Timer1.Interval > 8 then
+                  Tmr := Timer1.Interval div 2;
               end;
             end;
           end;
     end;
   if Timer1.Interval<>Tmr then
     Timer1.Interval:=Tmr;
+//  Timer1.Enabled:=True;
 end;
 
 procedure TMainForm.Action1Update(Sender: TObject);
@@ -973,7 +1040,7 @@ begin
   sgCards.Cells[1,0] := 'X';
   sgCards.Cells[2,0] := 'Y';
   sgCards.Cells[3,0] := 'a';
-  sgCards.Cells[0,1] := '1:1';
+  sgCards.Cells[0,1] := '1:1  ->';
 
   lblDir.Caption := '';
   lblFile.Caption := '';
@@ -1136,8 +1203,7 @@ end;
       if (x=seCountX.Value) and (y=seCountY.Value) then
         s := AFIleName
       else
-        s := ChangeFileExt(AFIleName,'') + '_' + IntToStr(X) + 'x'
-          + IntToStr(Y) + '_'+IntToStr(i) + '.png';
+        s := ChangeFileExt(AFIleName,'') + '_' +Formatfloat('00',i) + '.png';
       png.savetofile(s);
       ResetPng;
     end;
@@ -1155,9 +1221,9 @@ begin
       Split(SavePictureDialog1.filename, seCountX.Value, seCountY.Value,0)
     else
     if (seDeltaX.Value=seDeltaY.Value)and (seDeltaX.Value<0) then
-      Split(SavePictureDialog1.filename, seSplitX.Value, seSplitY.Value,-seDeltaX.Value)
+      Split(SavePictureDialog1.filename, 1, 1,-seDeltaX.Value)
     else
-      Split(SavePictureDialog1.filename, seSplitX.Value, seSplitY.Value,0);
+      Split(SavePictureDialog1.filename, 1, 1,0);
   end;
 end;
 
@@ -1179,6 +1245,8 @@ begin
     seDPI.Value := StrToIntDef(Values['DPI'],0);
     seFrameX.Value := StrToIntDef(Values['Frame.X'],0);
     seFrameY.Value := StrToIntDef(Values['Frame.Y'],0);
+    seShift.Value := StrToIntDef(Values['Shift.Y'],0);
+    seShift.Visible := seShift.Value<>0;
 
     shFrameColor.Pen.Color  := StrToIntDef(Values['Color'],0);
     shFrameColor.Brush.Color := $FFFFFF xor shFrameColor.Pen.Color;
@@ -1188,10 +1256,13 @@ begin
     for i:=1 to sgCards.RowCount-1 do
     begin
       sgCards.Cells[0,i] := IntToStr(1 + ((i-1) div seCountX.Value))+':'+IntToStr(1 + ((i-1) mod seCountX.Value));
+      if sgCards.Row=i then
+        sgCards.Cells[0,i] := sgCards.Cells[0,i] + '  ->';
       sgCards.Cells[1,i] := Values['Card['+sgCards.Cells[0,i]+'].X'];
       sgCards.Cells[2,i] := Values['Card['+sgCards.Cells[0,i]+'].Y'];
       sgCards.Cells[3,i] := Values['Card['+sgCards.Cells[0,i]+'].a'];
     end;
+
 
   finally
     Free
@@ -1219,6 +1290,7 @@ begin
     Values['DPI'] := IntToStr(seDPI.Value);
     Values['Color'] := IntToStr(shFrameColor.Pen.Color);
     Values['RoundRect'] := BoolToStr(chbRoundRect.Checked);
+    Values['Shift.Y'] := IntToStr(seShift.Value);
     if AGrid then
     begin
       Values['RowCount'] := IntToStr(sgCards.RowCount);
@@ -1379,13 +1451,13 @@ begin
      +'/' + FormatFloat('0.0', 25.4 / seDPI.Value * seSizeY.value )
      +^M +  FormatFloat('0', 25.4 / seDPI.Value * (seBorder.Value*2 + seSizeX.Value * seCountX.Value + seCountX.Value -1 + seInterval.Value * (seCountX.Value -1)))
     +'/' + FormatFloat('0', 25.4 / seDPI.Value *(seBorder.Value*2 + seSizeY.Value * seCountY.Value + seCountY.Value -1 + seInterval.Value * (seCountY.Value -1)))
-    +^M'A4 210/297';
 end;
 
 procedure TMainForm.DemoCard(x, y, i: integer; a: double;Frm:integer=0);
 var p0:TPoint;
     BufRect:TRect;
     r:integer;
+    sf,sx:integer;
 begin
 
   p0 := Point(x + Round(seSizeX.Value/2*Cos(a/180*Pi)) - Round(seSizeY.Value/2*Sin(a/180*Pi))
@@ -1413,6 +1485,18 @@ begin
   img1.Picture.Bitmap.Canvas.BrushCopy(Rect(0,0,BufRect.Right - BufRect.Left, BufRect.Bottom - BufRect.Top), imgSource.Picture.Bitmap, BufRect, clNone);
 
   RotateBitmapGDIP(img1.Picture.Bitmap, -a ,True, clNone);
+
+{
+  for sf := 1 to abs(seShift.Value) do
+  begin
+    sx:=
+
+    abs(seShift.Value)
+    img1.Picture.Bitmap.Canvas.BrushCopy()
+
+
+  end;
+}
 
   img1.Picture.Bitmap.Canvas.Pen.Color := ColorBox1.Selected;
   img1.Picture.Bitmap.Canvas.Brush.Style := bsClear;
@@ -1452,7 +1536,11 @@ begin
   Tmp := TGPBitmap.Create(Bmp.Handle, Bmp.Palette);
   Matrix := TGPMatrix.Create;
   try
+    Matrix.Shear(0, arctan(seShift.Value/seSizeX.value));
+    Matrix.Translate(0, -seShift.Value div 2);
     Matrix.RotateAt(Degs, MakePoint(0.5 * Bmp.Width, 0.5 * Bmp.Height));
+
+
 {
     if AdjustSize then
     begin
@@ -2078,6 +2166,9 @@ begin
     for j := 1 to seCountX.Value do
     begin
       sgCards.Cells[0,j + (i-1)*seCountX.Value] := IntToStr(i)+':'+IntToStr(j);
+      if sgCards.Row=j + (i-1)*seCountX.Value then
+        sgCards.Cells[0,j + (i-1)*seCountX.Value] := sgCards.Cells[0,j + (i-1)*seCountX.Value] + '  ->';
+
       sgCards.Cells[1,j + (i-1)*seCountX.Value] := IntToStr(seDeltaX.Value + seSizeX.Value * (j-1));
       sgCards.Cells[2,j + (i-1)*seCountX.Value] := IntToStr(seDeltaY.Value + seSizeY.Value * (i-1));
       sgCards.Cells[3,j + (i-1)*seCountX.Value] := '0';
@@ -2174,8 +2265,9 @@ begin
     end;
   end;
   imgSource.Picture.Assign(tmpBitmap);
-
   tmpBitmap.free;
+  Scale := Scale;
+
 end;
 
 procedure TMainForm.tbtSplitClick(Sender: TObject);
@@ -2234,8 +2326,6 @@ begin
     chbRoundRect.Checked := False;
     chbCuttingLine.Checked := False;
     chbSplit.Checked := True;
-    seSplitX.Value := 1;
-    seSplitY.Value := 1;
     seBorder.Value :=0;
 
 
@@ -2328,6 +2418,11 @@ begin
   CalcCenter;
 end;
 
+procedure TMainForm.seShiftChange(Sender: TObject);
+begin
+  Timer1Timer(nil);
+end;
+
 procedure TMainForm.seSizeXChange(Sender: TObject);
 begin
   FrameBox.Repaint;
@@ -2416,16 +2511,22 @@ begin
   Scale:= Scale * 2;
 end;
 
+procedure TMainForm.SpeedButton1Click(Sender: TObject);
+begin
+chbCorners.Checked := True;
+end;
+
 procedure TMainForm.Splitter1Moved(Sender: TObject);
 begin
   FOldCorned := '-';
 end;
 
-procedure TMainForm.CheckBox1Click(Sender: TObject);
+procedure TMainForm.chbCornersClick(Sender: TObject);
 begin
-  imgPreview.Visible := CheckBox1.Checked;
-  Splitter1.Visible := CheckBox1.Checked;
+  imgPreview.Visible := chbCorners.Checked;
+  Splitter1.Visible := chbCorners.Checked;
   Splitter1.Top := imgPreview.top-5;
+  seShift.Visible := chbCorners.Checked;
 
 end;
 
@@ -2442,7 +2543,7 @@ end;
 procedure TMainForm.chbResultClick(Sender: TObject);
 begin
   if chbResult.Checked then
-    gbResult.Height := 192
+    gbResult.Height := 176
   else
     gbResult.Height := chbResult.Height+2;
 
@@ -2494,12 +2595,14 @@ end;
 
 procedure TMainForm.sgCardsSelectCell(Sender: TObject; ACol, ARow: Integer;
   var CanSelect: Boolean);
+var i:integer;
 begin
   CalcCenter;
+  for i:= 0 to sgCards.RowCount - 1 do
+    if pos('  ->',sgCards.Cells[0,i])>0 then
+      sgCards.Cells[0,i] := StringReplace(sgCards.Cells[0,i], '  ->','',[]);
+  sgCards.Cells[0,Arow]:=sgCards.Cells[0,Arow] +'  ->';
 end;
-
-
-
 
 
 initialization
