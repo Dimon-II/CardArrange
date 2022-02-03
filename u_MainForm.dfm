@@ -15,7 +15,7 @@ object MainForm: TMainForm
   Scaled = False
   OnClose = FormClose
   OnCreate = FormCreate
-  PixelsPerInch = 120
+  PixelsPerInch = 96
   TextHeight = 13
   object Label3: TLabel
     Left = 8
@@ -46,9 +46,9 @@ object MainForm: TMainForm
       Caption = 'Source'
       object ScrollBox1: TScrollBox
         Left = 0
-        Top = 28
+        Top = 25
         Width = 810
-        Height = 668
+        Height = 671
         HorzScrollBar.Style = ssFlat
         HorzScrollBar.Tracking = True
         VertScrollBar.Style = ssFlat
@@ -57,6 +57,8 @@ object MainForm: TMainForm
         ParentShowHint = False
         ShowHint = True
         TabOrder = 0
+        ExplicitTop = 69
+        ExplicitHeight = 627
         object imgSource: TImage
           Left = 0
           Top = 0
@@ -73,7 +75,7 @@ object MainForm: TMainForm
           Left = 0
           Top = 0
           Width = 806
-          Height = 664
+          Height = 667
           Cursor = crCross
           Align = alClient
           OnClick = imgSourceClick
@@ -102,214 +104,246 @@ object MainForm: TMainForm
           OnMouseDown = Shape2MouseDown
         end
       end
-      object ToolBar2: TToolBar
+      object PageScroller1: TPageScroller
         Left = 0
         Top = 0
         Width = 810
-        Height = 28
-        AutoSize = True
-        ButtonHeight = 26
-        Caption = 'ToolBar1'
-        EdgeBorders = [ebBottom]
-        Images = ImageList1
-        ParentShowHint = False
-        ShowHint = True
+        Height = 25
+        Align = alTop
+        Control = Panel5
         TabOrder = 1
-        object ToolButton9: TToolButton
+        object Panel5: TPanel
           Left = 0
           Top = 0
-          Action = Action1
-        end
-        object ToolButton10: TToolButton
-          Left = 23
-          Top = 0
-          Action = Action2
-        end
-        object ToolButton11: TToolButton
-          Left = 46
-          Top = 0
-          Action = Action3
-        end
-        object ToolButton12: TToolButton
-          Left = 69
-          Top = 0
-          Action = Action4
-        end
-        object ToolButton13: TToolButton
-          Left = 92
-          Top = 0
-          Action = Action5
-        end
-        object ToolButton14: TToolButton
-          Left = 115
-          Top = 0
-          Action = Action6
-        end
-        object ToolButton19: TToolButton
-          Left = 138
-          Top = 0
-          Width = 8
-          Caption = 'ToolButton19'
-          ImageIndex = 9
-          Style = tbsSeparator
-        end
-        object ToolButton18: TToolButton
-          Left = 146
-          Top = 0
-          Action = Action8
-        end
-        object ToolButton17: TToolButton
-          Left = 169
-          Top = 0
-          Action = Action7
-        end
-        object ToolButton15: TToolButton
-          Left = 192
-          Top = 0
-          Width = 8
-          Caption = 'ToolButton7'
-          ImageIndex = 6
-          Style = tbsSeparator
-        end
-        object ToolButton16: TToolButton
-          Left = 200
-          Top = 0
-          Hint = 'Reset grid'
-          Caption = 'ToolButton8'
-          ImageIndex = 6
-          OnClick = ToolButton16Click
-        end
-        object ToolButton21: TToolButton
-          Left = 223
-          Top = 0
-          Width = 8
-          Caption = 'ToolButton21'
-          ImageIndex = 10
-          Style = tbsSeparator
-        end
-        object tbHideLines: TToolButton
-          Left = 231
-          Top = 0
-          Hint = 'Hide lines'
-          Caption = 'tbHideLines'
-          ImageIndex = 13
-          Style = tbsCheck
-          OnClick = tbHideLinesClick
-        end
-        object tbOnecard: TToolButton
-          Left = 254
-          Top = 0
-          Hint = 
-            'One card region:'#13#10'1. Choose card in grid'#13#10'2. Select rectangle ov' +
-            'er a card '#13#10'3. Click in the rectangle outside the card (bkg.colo' +
-            'r)'
-          Caption = 'tbOnecard'
-          ImageIndex = 10
-          Style = tbsCheck
-          OnClick = tbOnecardClick
-        end
-        object ToolButton20: TToolButton
-          Left = 277
-          Top = 0
-          Hint = 'Autodetect all'
-          Caption = 'ToolButton20'
-          ImageIndex = 9
-          OnClick = ToolButton20Click
-        end
-        object ToolButton23: TToolButton
-          Left = 300
-          Top = 0
-          Width = 8
-          Caption = 'ToolButton23'
-          ImageIndex = 11
-          Style = tbsSeparator
-        end
-        object TrackBar3: TTrackBar
-          Left = 308
-          Top = 0
-          Width = 93
-          Height = 26
-          Hint = 'Autodetect contrast setting'
-          Align = alLeft
-          Max = 6
-          Min = 1
-          ParentShowHint = False
-          PageSize = 4
-          Position = 1
-          ShowHint = True
+          Width = 810
+          Height = 28
+          Align = alTop
+          AutoSize = True
+          BevelEdges = [beBottom]
           TabOrder = 0
-          ThumbLength = 16
-        end
-        object cbFrameOrGround: TComboBox
-          Left = 401
-          Top = 0
-          Width = 71
-          Height = 21
-          Style = csDropDownList
-          ItemHeight = 13
-          ItemIndex = 0
-          TabOrder = 4
-          Text = 'Ground'
-          Items.Strings = (
-            'Ground'
-            'Frame')
-        end
-        object Panel2: TPanel
-          Left = 472
-          Top = 0
-          Width = 47
-          Height = 26
-          Alignment = taRightJustify
-          BevelOuter = bvNone
-          BorderWidth = 5
-          Caption = 'Blink'
-          TabOrder = 3
-        end
-        object ColorBox1: TColorBox
-          Left = 519
-          Top = 0
-          Width = 80
-          Height = 22
-          Selected = clLime
-          Style = [cbStandardColors, cbPrettyNames]
-          ItemHeight = 16
-          TabOrder = 1
-        end
-        object ColorBox2: TColorBox
-          Left = 599
-          Top = 0
-          Width = 80
-          Height = 22
-          Selected = clGreen
-          Style = [cbStandardColors, cbPrettyNames]
-          ItemHeight = 16
-          TabOrder = 2
-        end
-        object Panel4: TPanel
-          Left = 679
-          Top = 0
-          Width = 47
-          Height = 26
-          Alignment = taRightJustify
-          BevelOuter = bvNone
-          BorderWidth = 5
-          Caption = 'Anchor'
-          TabOrder = 5
-        end
-        object cbAnchor: TComboBox
-          Left = 726
-          Top = 0
-          Width = 71
-          Height = 21
-          Hint = 'Rotation anchor'
-          Style = csDropDownList
-          ItemHeight = 13
-          ItemIndex = 0
-          TabOrder = 6
-          Text = 'Top-Left'
-          Items.Strings = (
-            'Top-Left'
-            'Center')
+          ExplicitTop = 8
+          object TrackBar3: TTrackBar
+            Left = 309
+            Top = 1
+            Width = 93
+            Height = 26
+            Hint = 'Autodetect contrast setting'
+            Align = alLeft
+            Max = 6
+            Min = 1
+            ParentShowHint = False
+            PageSize = 4
+            Position = 1
+            ShowHint = True
+            TabOrder = 0
+            ThumbLength = 16
+          end
+          object cbFrameOrGround: TComboBox
+            Left = 402
+            Top = 1
+            Width = 71
+            Height = 21
+            Align = alLeft
+            Style = csDropDownList
+            ItemIndex = 0
+            TabOrder = 4
+            Text = 'Ground'
+            Items.Strings = (
+              'Ground'
+              'Frame')
+            ExplicitLeft = 401
+            ExplicitTop = 0
+          end
+          object Panel2: TPanel
+            Left = 473
+            Top = 1
+            Width = 47
+            Height = 26
+            Align = alLeft
+            Alignment = taRightJustify
+            BevelOuter = bvNone
+            BorderWidth = 5
+            Caption = 'Blink'
+            TabOrder = 3
+            ExplicitLeft = 467
+            ExplicitTop = -5
+          end
+          object ColorBox1: TColorBox
+            Left = 520
+            Top = 1
+            Width = 80
+            Height = 22
+            Align = alLeft
+            Selected = clLime
+            Style = [cbStandardColors, cbPrettyNames]
+            TabOrder = 1
+            ExplicitLeft = 519
+            ExplicitTop = 0
+          end
+          object ColorBox2: TColorBox
+            Left = 600
+            Top = 1
+            Width = 80
+            Height = 22
+            Align = alLeft
+            Selected = clGreen
+            Style = [cbStandardColors, cbPrettyNames]
+            TabOrder = 2
+            ExplicitLeft = 599
+            ExplicitTop = 0
+          end
+          object Panel4: TPanel
+            Left = 680
+            Top = 1
+            Width = 47
+            Height = 26
+            Align = alLeft
+            Alignment = taRightJustify
+            BevelOuter = bvNone
+            BorderWidth = 5
+            Caption = 'Anchor'
+            TabOrder = 5
+          end
+          object cbAnchor: TComboBox
+            Left = 727
+            Top = 1
+            Width = 71
+            Height = 21
+            Hint = 'Rotation anchor'
+            Align = alLeft
+            Style = csDropDownList
+            ItemIndex = 0
+            TabOrder = 6
+            Text = 'Top-Left'
+            Items.Strings = (
+              'Top-Left'
+              'Center')
+            ExplicitLeft = 726
+            ExplicitTop = 0
+          end
+          object ToolBar2: TToolBar
+            Left = 1
+            Top = 1
+            Width = 308
+            Height = 26
+            Align = alLeft
+            AutoSize = True
+            ButtonHeight = 26
+            Caption = 'ToolBar1'
+            Images = ImageList1
+            ParentShowHint = False
+            ShowHint = True
+            TabOrder = 7
+            object ToolButton9: TToolButton
+              Left = 0
+              Top = 0
+              Action = Action1
+            end
+            object ToolButton10: TToolButton
+              Left = 23
+              Top = 0
+              Action = Action2
+            end
+            object ToolButton11: TToolButton
+              Left = 46
+              Top = 0
+              Action = Action3
+            end
+            object ToolButton12: TToolButton
+              Left = 69
+              Top = 0
+              Action = Action4
+            end
+            object ToolButton13: TToolButton
+              Left = 92
+              Top = 0
+              Action = Action5
+            end
+            object ToolButton14: TToolButton
+              Left = 115
+              Top = 0
+              Action = Action6
+            end
+            object ToolButton19: TToolButton
+              Left = 138
+              Top = 0
+              Width = 8
+              Caption = 'ToolButton19'
+              ImageIndex = 9
+              Style = tbsSeparator
+            end
+            object ToolButton18: TToolButton
+              Left = 146
+              Top = 0
+              Action = Action8
+            end
+            object ToolButton17: TToolButton
+              Left = 169
+              Top = 0
+              Action = Action7
+            end
+            object ToolButton15: TToolButton
+              Left = 192
+              Top = 0
+              Width = 8
+              Caption = 'ToolButton7'
+              ImageIndex = 6
+              Style = tbsSeparator
+            end
+            object ToolButton16: TToolButton
+              Left = 200
+              Top = 0
+              Hint = 'Reset grid'
+              Caption = 'ToolButton8'
+              ImageIndex = 6
+              OnClick = ToolButton16Click
+            end
+            object ToolButton21: TToolButton
+              Left = 223
+              Top = 0
+              Width = 8
+              Caption = 'ToolButton21'
+              ImageIndex = 10
+              Style = tbsSeparator
+            end
+            object tbHideLines: TToolButton
+              Left = 231
+              Top = 0
+              Hint = 'Hide lines'
+              Caption = 'tbHideLines'
+              ImageIndex = 13
+              Style = tbsCheck
+              OnClick = tbHideLinesClick
+            end
+            object tbOnecard: TToolButton
+              Left = 254
+              Top = 0
+              Hint = 
+                'One card region:'#13#10'1. Choose card in grid'#13#10'2. Select rectangle ov' +
+                'er a card '#13#10'3. Click in the rectangle outside the card (bkg.colo' +
+                'r)'
+              Caption = 'tbOnecard'
+              ImageIndex = 10
+              Style = tbsCheck
+              OnClick = tbOnecardClick
+            end
+            object ToolButton20: TToolButton
+              Left = 277
+              Top = 0
+              Hint = 'Autodetect all'
+              Caption = 'ToolButton20'
+              ImageIndex = 9
+              OnClick = ToolButton20Click
+            end
+            object ToolButton23: TToolButton
+              Left = 300
+              Top = 0
+              Width = 8
+              Caption = 'ToolButton23'
+              ImageIndex = 11
+              Style = tbsSeparator
+            end
+          end
         end
       end
     end
@@ -388,6 +422,119 @@ object MainForm: TMainForm
           Pen.Style = psDot
           Visible = False
         end
+      end
+    end
+    object TabSheet1: TTabSheet
+      Caption = 'About'
+      ImageIndex = 4
+      object Memo1: TMemo
+        Left = 0
+        Top = 0
+        Width = 810
+        Height = 696
+        Align = alClient
+        Lines.Strings = (
+          '# CardArrange '
+          'Program for processing scanned card games - slpit and align.'
+          ''
+          'https://github.com/Dimon-II/CardArrange'
+          'Open-source software, free software'
+          ''
+          
+            '1. The program allows you to select several rectangular areas lo' +
+            'cated at different angles in the picture.'
+          
+            '2. Automatic recognition works for an angle of no more than 30 d' +
+            'egrees (the default is 20), cards should be at clear but not too' +
+            ' long intervals and have clearly visible '
+          'borders of the card itself or a frame picture on the card.'
+          
+            '3. Open the image file (preferably 300 DPI, it'#8217's inconvenient to' +
+            ' work with a larger one).'
+          
+            '4. Set the size of the cards (Size), the number of cards on the ' +
+            'sheet (Count) and the approximate indent left / top (Delta)'
+          
+            '5. By double-clicking on the upper left corner of the card in th' +
+            'e picture, you can set the frame and check the entered size.'
+          
+            '6. Button ?{: fills the table with approximate coordinates of th' +
+            'e cards according to their size and number. '
+          
+            '7. If the picture is already loaded - auto-recognition is perfor' +
+            'med. If the center of the recognized area is in the area of '#8203#8203'th' +
+            'e '#8220'approximate'#8221' card, then new coordinates and an '
+          'angle are set for it, otherwise a row is added to the table. '
+          
+            '8. If all cards have the same color frame, you can use the new [' +
+            'Frame] auto-recognition mode. To do this, select a border color:'
+          
+            '  - (Frame color) button and click on the picture in the area wi' +
+            'th the desired color'
+          '  - switch (Ground / Frame) mode'
+          '  - and try with different contrast options.'
+          
+            '(This mode solves the problem with shadows of cards on a light b' +
+            'ackground).'
+          
+            '9. When you select a card in the table, it is displayed on the s' +
+            'creen with a flickering frame. Coordinates and angles can be cor' +
+            'rected using the buttons with arrows and '
+          
+            'card rotation, double-click on the upper left corner, or enter c' +
+            'oordinates manually.'
+          
+            '19. This table is written to the INI file with the name of the i' +
+            'mage file and is automatically loaded when the image is reloaded' +
+            '.'
+          
+            '11. Cards are exported in the same block as in the original imag' +
+            'e (for example 3x3), with the Split option you can save cards on' +
+            'e at a time in a '
+          'separate file.'
+          
+            '12. Frame - draws a single-color frame on over of the card, Roun' +
+            'd rect - rounds the corners of the frame, the color is selected ' +
+            'on the original image. If the visible elements '
+          'of '
+          
+            'the cardp are far from its edge, you can temporarily assign a fr' +
+            'ame for manual positioning and zero before exporting.'
+          '13. Cutting line adds cut marks when exporting'
+          
+            '14. Parameters Border, Interval specify the placement of cards d' +
+            'uring export, Mirror fills the interval between cards.'
+          
+            '15. The Selected tab allows you to see already rotated card and ' +
+            'focusing on some vertical element to specify the degree of rotat' +
+            'ion by combining the image in the enlarged '
+          'block when the mouse button is pressed.'
+          
+            '16. The new "scissors" button allows to split a large image into' +
+            ' separate sheets of a given size (you can use the paper settings' +
+            ' of your printer) with "bleed" for cropping.'
+          
+            '17. Preview Cornesr -  precise manual fix tool: a separate pictu' +
+            're on the right below shows the CORNER parts of the card, withou' +
+            't scaling, combined side by side. The step '
+          'is clearly visible if the edge of the cards is contrasting.'
+          ''
+          'Author - Dmitry Yatsenko (yatcenko@gmail.com)'
+          'Development environment: Delphi (5-7-2007-10.4)'
+          ''
+          
+            'PS: I highly recommend processing scanned cards with Sattva Desc' +
+            'reen plug-in. '
+          'http://www.descreen.net/eng/soft/descreen/descreen.htm'
+          
+            'Varning: the free version has a 2000x2000 pixel image size limit' +
+            '.')
+        ReadOnly = True
+        TabOrder = 0
+        ExplicitLeft = 160
+        ExplicitTop = 184
+        ExplicitWidth = 185
+        ExplicitHeight = 89
       end
     end
   end
@@ -830,8 +977,6 @@ object MainForm: TMainForm
         Align = alClient
         Caption = 'Cards'
         TabOrder = 3
-        ExplicitTop = 407
-        ExplicitHeight = 275
         object imgPreview: TImage
           Left = 2
           Top = 188
@@ -935,10 +1080,11 @@ object MainForm: TMainForm
           ParentFont = False
           TabOrder = 1
           object SpeedButton1: TSpeedButton
-            Left = 150
+            Left = 112
             Top = 0
             Width = 16
             Height = 31
+            Align = alLeft
             Flat = True
             Glyph.Data = {
               4A020000424D4A02000000000000360000002800000009000000130000000100
@@ -961,6 +1107,7 @@ object MainForm: TMainForm
               00FFFF00FFFF00FF00000000000000000000FF00FFFF00FFFF00FFFF00FFFF00
               FFFF00FFFF00FFFF00FFFF00FF00}
             OnClick = SpeedButton1Click
+            ExplicitTop = 6
           end
           object TrackBar1: TTrackBar
             Left = 64
@@ -993,10 +1140,16 @@ object MainForm: TMainForm
             TickMarks = tmTopLeft
           end
           object seShift: TSpinEdit
-            Left = 108
-            Top = 6
-            Width = 45
+            AlignWithMargins = True
+            Left = 128
+            Top = 5
+            Width = 40
             Height = 22
+            Margins.Left = 0
+            Margins.Top = 5
+            Margins.Right = 0
+            Margins.Bottom = 5
+            Align = alLeft
             Font.Charset = DEFAULT_CHARSET
             Font.Color = clWindowText
             Font.Height = -12
@@ -1009,6 +1162,8 @@ object MainForm: TMainForm
             Value = 0
             Visible = False
             OnChange = seShiftChange
+            ExplicitLeft = 152
+            ExplicitTop = 1
           end
         end
         object sgCards: TStringGrid
@@ -1028,7 +1183,6 @@ object MainForm: TMainForm
           OnClick = sgCardsClick
           OnSelectCell = sgCardsSelectCell
           OnSetEditText = sgCardsSetEditText
-          ExplicitHeight = 95
         end
       end
       object Panel3: TPanel
@@ -1082,7 +1236,7 @@ object MainForm: TMainForm
     Left = 316
     Top = 132
     Bitmap = {
-      494C01010E001800240010001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
+      494C01010E001800040010001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
       0000000000003600000028000000400000004000000001002000000000000040
       0000000000000000000000000000000000000000000000000000000000000000
       0000000000000000000000000000000000000000000000000000000000000000

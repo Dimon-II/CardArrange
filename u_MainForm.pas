@@ -5,7 +5,8 @@ interface
 uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
   Dialogs, ExtCtrls, ComCtrls, Buttons, StdCtrls, Spin, ExtDlgs, Grids,
-  ToolWin, ImgList, ActnList,pngimage, AppEvnts,GDIPOBJ, GDIPAPI, Menus;
+  ToolWin, ImgList, ActnList,pngimage, AppEvnts,GDIPOBJ, GDIPAPI, Menus,
+  System.Actions, System.ImageList;
 
 type
   TMainForm = class(TForm)
@@ -88,28 +89,8 @@ type
     chbSplit: TCheckBox;
     chbMirror: TCheckBox;
     seDPI: TSpinEdit;
-    ToolBar2: TToolBar;
-    ToolButton9: TToolButton;
-    ToolButton10: TToolButton;
-    ToolButton11: TToolButton;
-    ToolButton12: TToolButton;
-    ToolButton13: TToolButton;
-    ToolButton14: TToolButton;
-    ToolButton15: TToolButton;
-    ToolButton16: TToolButton;
-    ToolButton17: TToolButton;
-    ToolButton18: TToolButton;
-    ToolButton19: TToolButton;
-    ToolButton20: TToolButton;
     FrameBox: TPaintBox;
-    ToolButton21: TToolButton;
-    ToolButton23: TToolButton;
-    TrackBar3: TTrackBar;
-    tbOnecard: TToolButton;
     Shape2: TShape;
-    ColorBox1: TColorBox;
-    ColorBox2: TColorBox;
-    Panel2: TPanel;
     imgPreview: TImage;
     Action7: TAction;
     Action8: TAction;
@@ -119,19 +100,43 @@ type
     Splitter2: TSplitter;
     chbDimension: TCheckBox;
     chbResult: TCheckBox;
-    cbFrameOrGround: TComboBox;
     ToolBar3: TToolBar;
     tbtLoad: TToolButton;
     tbtSaveIni: TToolButton;
     tbtRotate: TToolButton;
     tbtSave: TToolButton;
     ToolButton27: TToolButton;
-    Panel4: TPanel;
-    cbAnchor: TComboBox;
     tbtSplit: TToolButton;
-    tbHideLines: TToolButton;
     seShift: TSpinEdit;
     SpeedButton1: TSpeedButton;
+    PageScroller1: TPageScroller;
+    Panel5: TPanel;
+    TrackBar3: TTrackBar;
+    cbFrameOrGround: TComboBox;
+    Panel2: TPanel;
+    ColorBox1: TColorBox;
+    ColorBox2: TColorBox;
+    Panel4: TPanel;
+    cbAnchor: TComboBox;
+    ToolBar2: TToolBar;
+    ToolButton9: TToolButton;
+    ToolButton10: TToolButton;
+    ToolButton11: TToolButton;
+    ToolButton12: TToolButton;
+    ToolButton13: TToolButton;
+    ToolButton14: TToolButton;
+    ToolButton19: TToolButton;
+    ToolButton18: TToolButton;
+    ToolButton17: TToolButton;
+    ToolButton15: TToolButton;
+    ToolButton16: TToolButton;
+    ToolButton21: TToolButton;
+    tbHideLines: TToolButton;
+    tbOnecard: TToolButton;
+    ToolButton20: TToolButton;
+    ToolButton23: TToolButton;
+    TabSheet1: TTabSheet;
+    Memo1: TMemo;
     procedure imgSourceMouseMove(Sender: TObject; Shift: TShiftState; X,
       Y: Integer);
     procedure imgSourceClick(Sender: TObject);
@@ -599,7 +604,9 @@ var
 
 begin
   Tmr:=512;
-//  Timer1.Enabled:=False;
+
+
+//  Timer1.Enabled:=True;
 if {pcMain.ActivePageIndex = 0) and}not Shape2.Visible then
   begin
   DrawFrame(StrToIntDef(sgCards.Cells[1, sgCards.Row],0),
@@ -617,7 +624,7 @@ if {pcMain.ActivePageIndex = 0) and}not Shape2.Visible then
     +'/' + FormatFloat('0.0', 25.4 / seDPI.Value *(seBorder.Value*2 + seSizeY.Value * seCountY.Value + seCountY.Value -1 + seInterval.Value * (seCountY.Value -1)))
 ;
 
-  if Sender <> nil then
+  if (Sender <> nil)  and   (GetAsyncKeystate(VK_LBUTTON) shr 31=1) then
   for I := 0 to ComponentCount - 1 do
     if Components[i] is TToolButton then
     begin
@@ -638,7 +645,6 @@ if {pcMain.ActivePageIndex = 0) and}not Shape2.Visible then
     end;
   if Timer1.Interval<>Tmr then
     Timer1.Interval:=Tmr;
-//  Timer1.Enabled:=True;
 end;
 
 procedure TMainForm.Action1Update(Sender: TObject);
@@ -1229,10 +1235,12 @@ end;
 
 procedure TMainForm.LoadIniFile(AFilename: string);
 var i:integer;
+  s:string;
 begin
   with TStringList.Create do
   try
     LoadFromFile(AFilename);
+    text := StringReplace(text,'  ->','',[rfReplaceAll]);
     seSizeX.Value := StrToIntDef(Values['Size.X'],0);
     seSizeY.Value := StrToIntDef(Values['Size.Y'],0);
     seDeltaX.Value := StrToIntDef(Values['Delta.X'],0);
@@ -1256,11 +1264,12 @@ begin
     for i:=1 to sgCards.RowCount-1 do
     begin
       sgCards.Cells[0,i] := IntToStr(1 + ((i-1) div seCountX.Value))+':'+IntToStr(1 + ((i-1) mod seCountX.Value));
+      s := sgCards.Cells[0,i];
       if sgCards.Row=i then
         sgCards.Cells[0,i] := sgCards.Cells[0,i] + '  ->';
-      sgCards.Cells[1,i] := Values['Card['+sgCards.Cells[0,i]+'].X'];
-      sgCards.Cells[2,i] := Values['Card['+sgCards.Cells[0,i]+'].Y'];
-      sgCards.Cells[3,i] := Values['Card['+sgCards.Cells[0,i]+'].a'];
+      sgCards.Cells[1,i] := Values['Card['+s+'].X'];
+      sgCards.Cells[2,i] := Values['Card['+s+'].Y'];
+      sgCards.Cells[3,i] := Values['Card['+s+'].a'];
     end;
 
 
@@ -1427,11 +1436,22 @@ end;
 
 procedure TMainForm.imgFrameMouseDown(Sender: TObject; Button: TMouseButton;
   Shift: TShiftState; X, Y: Integer);
+var
+  i:integer;
 begin
   if ssRight in Shift then
   begin
     fMove.X := x;
     fMove.Y := y;
+    for I := 1 to sgCards.RowCount-1 do
+      if (StrToIntDef(sgCards.Cells[1,i],0) <  Round(x / Scale ))
+        and (StrToIntDef(sgCards.Cells[1,i],0)+seSizeX.Value >  Round(x / Scale ))
+        and (StrToIntDef(sgCards.Cells[2,i],0) <  Round(y / Scale ))
+        and (StrToIntDef(sgCards.Cells[2,i],0)+seSizeY.Value >  Round(y / Scale ))
+      then begin
+        sgCards.Row := i;
+        Break;
+      end;
   end;
 
   if tbOnecard.Down then
