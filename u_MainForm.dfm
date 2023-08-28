@@ -10,12 +10,10 @@ object MainForm: TMainForm
   Font.Height = -11
   Font.Name = 'MS Sans Serif'
   Font.Style = []
-  OldCreateOrder = False
   Position = poScreenCenter
   Scaled = False
   OnClose = FormClose
   OnCreate = FormCreate
-  PixelsPerInch = 96
   TextHeight = 13
   object Label3: TLabel
     Left = 8
@@ -42,6 +40,8 @@ object MainForm: TMainForm
     TabOrder = 0
     TabPosition = tpBottom
     OnChange = pcMainChange
+    ExplicitWidth = 814
+    ExplicitHeight = 721
     object tsSource: TTabSheet
       Caption = 'Source'
       object ScrollBox1: TScrollBox
@@ -57,8 +57,8 @@ object MainForm: TMainForm
         ParentShowHint = False
         ShowHint = True
         TabOrder = 0
-        ExplicitTop = 69
-        ExplicitHeight = 627
+        ExplicitWidth = 806
+        ExplicitHeight = 670
         object imgSource: TImage
           Left = 0
           Top = 0
@@ -112,16 +112,17 @@ object MainForm: TMainForm
         Align = alTop
         Control = Panel5
         TabOrder = 1
+        ExplicitWidth = 806
         object Panel5: TPanel
           Left = 0
           Top = 0
-          Width = 810
+          Width = 798
           Height = 28
           Align = alTop
           AutoSize = True
           BevelEdges = [beBottom]
           TabOrder = 0
-          ExplicitTop = 8
+          ExplicitWidth = 794
           object TrackBar3: TTrackBar
             Left = 309
             Top = 1
@@ -151,8 +152,6 @@ object MainForm: TMainForm
             Items.Strings = (
               'Ground'
               'Frame')
-            ExplicitLeft = 401
-            ExplicitTop = 0
           end
           object Panel2: TPanel
             Left = 473
@@ -165,8 +164,6 @@ object MainForm: TMainForm
             BorderWidth = 5
             Caption = 'Blink'
             TabOrder = 3
-            ExplicitLeft = 467
-            ExplicitTop = -5
           end
           object ColorBox1: TColorBox
             Left = 520
@@ -177,8 +174,6 @@ object MainForm: TMainForm
             Selected = clLime
             Style = [cbStandardColors, cbPrettyNames]
             TabOrder = 1
-            ExplicitLeft = 519
-            ExplicitTop = 0
           end
           object ColorBox2: TColorBox
             Left = 600
@@ -189,8 +184,6 @@ object MainForm: TMainForm
             Selected = clGreen
             Style = [cbStandardColors, cbPrettyNames]
             TabOrder = 2
-            ExplicitLeft = 599
-            ExplicitTop = 0
           end
           object Panel4: TPanel
             Left = 680
@@ -218,8 +211,6 @@ object MainForm: TMainForm
             Items.Strings = (
               'Top-Left'
               'Center')
-            ExplicitLeft = 726
-            ExplicitTop = 0
           end
           object ToolBar2: TToolBar
             Left = 1
@@ -531,10 +522,6 @@ object MainForm: TMainForm
             '.')
         ReadOnly = True
         TabOrder = 0
-        ExplicitLeft = 160
-        ExplicitTop = 184
-        ExplicitWidth = 185
-        ExplicitHeight = 89
       end
     end
   end
@@ -547,6 +534,8 @@ object MainForm: TMainForm
     BevelOuter = bvNone
     Constraints.MinWidth = 185
     TabOrder = 1
+    ExplicitLeft = 817
+    ExplicitHeight = 721
     object pnParams: TPanel
       Left = 0
       Top = 0
@@ -555,6 +544,7 @@ object MainForm: TMainForm
       Align = alClient
       BorderWidth = 5
       TabOrder = 0
+      ExplicitHeight = 701
       object gbFile: TGroupBox
         Left = 6
         Top = 6
@@ -977,6 +967,7 @@ object MainForm: TMainForm
         Align = alClient
         Caption = 'Cards'
         TabOrder = 3
+        ExplicitHeight = 289
         object imgPreview: TImage
           Left = 2
           Top = 188
@@ -1162,8 +1153,6 @@ object MainForm: TMainForm
             Value = 0
             Visible = False
             OnChange = seShiftChange
-            ExplicitLeft = 152
-            ExplicitTop = 1
           end
         end
         object sgCards: TStringGrid
@@ -1183,6 +1172,7 @@ object MainForm: TMainForm
           OnClick = sgCardsClick
           OnSelectCell = sgCardsSelectCell
           OnSetEditText = sgCardsSetEditText
+          ExplicitHeight = 109
         end
       end
       object Panel3: TPanel
@@ -1193,6 +1183,7 @@ object MainForm: TMainForm
         Align = alBottom
         BevelOuter = bvNone
         TabOrder = 4
+        ExplicitTop = 681
         object chbCorners: TCheckBox
           Left = 8
           Top = -1
@@ -1212,6 +1203,7 @@ object MainForm: TMainForm
       Align = alBottom
       BevelOuter = bvNone
       TabOrder = 1
+      ExplicitTop = 701
     end
   end
   object OpenPictureDialog1: TOpenPictureDialog

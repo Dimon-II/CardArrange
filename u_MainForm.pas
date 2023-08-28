@@ -1305,7 +1305,7 @@ begin
       Values['RowCount'] := IntToStr(sgCards.RowCount);
       for i:=1 to sgCards.RowCount-1 do
       begin
-        Values['Card['+sgCards.Cells[0,i]+'].X'] := sgCards.Cells[1,i];
+        Values['Card['+sgCards.Cells[0,i]+'].X'] := StringReplace(sgCards.Cells[1,i],'  ->','',[]);
         Values['Card['+sgCards.Cells[0,i]+'].Y'] := sgCards.Cells[2,i];
         Values['Card['+sgCards.Cells[0,i]+'].a'] := sgCards.Cells[3,i];
       end;
